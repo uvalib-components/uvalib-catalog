@@ -12,26 +12,180 @@ Element providing interface to the U.Va. Library catalog.
 @status alpha
 @homepage http://polymerlabs.github.io/uvalib-catalog
 -->
-<polymer-element name="uvalib-catalog" attributes="notitle author">
+<polymer-element name="uvalib-catalog" attributes="auto query title count page facetQuery sort sortField items">
 
   <template>
-
-    <link rel="stylesheet" href="uvalib-catalog.css" />
     
-    <h1>Hello from uvalib-catalog</h1>
-    <content></content>
+    <polymer-jsonp id="jsonp" auto?={{auto}} url="http://www2.lib.virginia.edu/mobileAPI/catalog.json?f_inclusive%5Blibrary_facet%5D%5BAlderman%5D=1&f_inclusive%5Bformat_facet%5D%5BBook%5D=1&f_inclusive%5Bformat_facet%5D%5BBroadside%5D=1&f_inclusive%5Bformat_facet%5D%5BGovernment+Document%5D=1&f_inclusive%5Bformat_facet%5D%5BJournal%2FMagazine%5D=1&f_inclusive%5Bformat_facet%5D%5BLarge+Print%5D=1&f_inclusive%5Bformat_facet%5D%5BManuscript%5D=1&f_inclusive%5Bformat_facet%5D%5BMap%5D=1&f_inclusive%5Bformat_facet%5D%5BMicroform%5D=1&f_inclusive%5Bformat_facet%5D%5BMixed+Materials%5D=1&f_inclusive%5Bformat_facet%5D%5BNewspaper%5D=1&f_inclusive%5Bformat_facet%5D%5BOther+Media%5D=1&f_inclusive%5Bformat_facet%5D%5BPhotographs%5D=1&f_inclusive%5Bformat_facet%5D%5BPhysical+Object%5D=1&f_inclusive%5Bformat_facet%5D%5BPrint%5D=1&f_inclusive%5Bformat_facet%5D%5BThesis%2FDissertation%5D=1&catalog_select=catalog&op=AND&author=&title={{query}}&journal=&subject=&keyword=&call_number=&published=&publication_date_start=&publication_date_end=&sort_key=relevancy&search_field=advanced&commit=Search&callback=" response="{{response}}" on-polymer-response="{{onJSONPResponse}}"></polymer-jsonp>  
 
   </template>
 
+  <script src="../sprintf/dist/sprintf.min.js"></script>
   <script>
 
+    Polymer('uvalib-catalog-api', {
+      /**
+       * The `catalog-response` event is fired when a response has been received from a query. 
+       *
+       * @event catalog-response 
+       */
+
+      /**
+       * If true, automatically performs a request when url changes.
+       *
+       * @attribute auto
+       * @type bool
+       */
+      auto: false,
+
+      /**
+       * The `query` attribute will hold the search query.
+       *
+       * @attribute query 
+       * @type string
+       */
+      query: '',
+
+      /**
+       * The `count` attribute will limit the results returned from a request.
+       *
+       * @attribute count
+       * @type int
+       */
+       count: 20,
+
+      /**
+       * The `page` attribute will specify the subset of results to return (along with the count)
+       *
+       * @attribute page
+       * @type int
+       */
+       page: 1,
+
+      /**
+       * The `facetQuery` attribute is an object that will limit query results based on facet selections.
+       *
+       * @attribute facetQuery
+       * @type object
+       */
+       facetQuery: {},  //{'format_facet':'Book',
+                        // 'library_facet':'Alderman'},
+
+      /**
+       * The `sort` attribute controls the rank order of the results
+       *
+       * @attribute sort
+       * @type string
+       */
+       sort: 'score+desc,+year_multisort_i+desc',
+//sortField
+
+      /**
+       * The `items` attribute is where the results catalog items are stored
+       *
+       * @attribute items
+       * @type Array
+       */
+      items: [],
+
+      /**
+       * The `response` is a property that holds the response from the catalogs api.
+       *
+       * @property response 
+       * @type string 
+       */
+      response: '',
+
+      /**
+       * 'fetch' is used to execute a query when the 'auto' attribute is not used.
+       *
+       * @method fetch
+       */
+      fetch: function() {
+        console.log('fetch called');
+        this.$.jsonp.go();
+      },
+
+      ready: function() {
+      },
+
+      stringFacets: function(facets){
+        var strFacets = ""
+        for (var facet in facets) {
+          strFacets += "&f["+facet+"][]="+facets[facet];
+        } 
+        return strFacets;
+      },
+      onJSONPResponse: function(){
+        this.fire('catalog-response'); 
+      },
+
+      responseChanged: function(oldValue, newValue){
+        this.items = this.response.response.docs;
+        this.normalizeCallnumbers();
+      },
+
+      normalizeCallnumbers: function(){
+        for (var i=0; i<this.items.length; i++) {
+          this.items[i].normalizedCallNum = this.normalizeCallnumber(this.items[i]['call_number_display'][0] );
+        }
+      },
+
+      normalizeCallnumber: function(lcc) {
+        var parsed = this.parseCallnumber(lcc);
+        var alpha = parsed[0],
+            inte = parsed[1],
+            frac = parsed[2],
+            rmdr = parsed[3],
+            norm = '';
+        if (frac == '') {
+          if (inte == '') {
+            norm = sprintf("%-3s", alpha);
+          } else {
+            norm = sprintf("%-3s%4d %s", alpha, inte, rmdr);
+          }
+        } else {
+          norm = sprintf("%-3s%4d.%d %s", alpha, inte, frac, rmdr);
+        }
+        norm = norm.replace(/ +$/, '');
+        return norm;
+      },
+
+      parseCallnumber: function(lcc) {
+        var alpha = "",
+            inte = "",
+            frac = "",
+            rmdr = "";
+        lcc = lcc.replace(/^([A-Z]{1,3}) */, function(match,p1){
+                alpha = p1;
+                return "";
+              } );
+        lcc = lcc.replace(/^(\d+)/, function(match,p1){
+                inte = p1;
+                return "";
+              } );
+        if (inte) {
+          rmdr = lcc.replace(/^\.(\d+)/, function(match,p1){
+                  frac = p1;
+                  return "";
+                } );
+          rmdr = rmdr.replace(/^ *\.?(?=[A-Z])/, '.');
+        }
+        rmdr = rmdr.replace(/\.(?=A-Z])/, '');
+        return [alpha, inte, frac, rmdr];
+      }
+
+    });
+
+
+/*
     Polymer('uvalib-catalog', {
       /**
        * The `author` attribute sets an initial author
        * 
        * @attribute author
        * @type string
-       */
+       *
       author: 'Dimitri Glazkov',
       
       /**
@@ -39,7 +193,7 @@ Element providing interface to the U.Va. Library catalog.
        * 
        * @property fancy
        * @type bool
-       */
+       *
       fancy: false,
 
       ready: function() {
@@ -54,7 +208,7 @@ Element providing interface to the U.Va. Library catalog.
        * @method sayHello
        * @return {String} Returns a string greeting.
        * @param {String} greeting Pass in a specific greeting
-       */
+       *
       sayHello: function(greeting) {
         var response = greeting || 'Hello World!';
         return 'uvalib-catalog says, ' + response;
@@ -72,13 +226,13 @@ Element providing interface to the U.Va. Library catalog.
        * it will dispatch an event that claims lasers were fired :)
        * 
        * @method fireLasers
-       */
+       *
       fireLasers: function() {
         this.fire('uvalib-catalog-lasers-success', { sound: 'Pew pew pew!' });
       }
 
     });
-
+*/
   </script>
 
 </polymer-element>
