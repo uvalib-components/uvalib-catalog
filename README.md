@@ -1,8 +1,8 @@
-seed-element
+uvalib-catalog
 ================
 
-See the [component page](http://polymerlabs.github.io/seed-element) for more information.
+See the [component page](http://dougchestnut.github.io/uvalib-catalog) for more information.
 
 ## Getting Started
 
-We've put together a [guide to seed-element](http://www.polymer-project.org/docs/start/reusableelements.html) to help get you rolling.
+Info here...

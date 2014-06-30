@@ -1,31 +1,31 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
-Element providing solution to no problem in particular.
+Element providing interface to the U.Va. Library catalog.
 
 ##### Example
 
-    <seed-element></seed-element>
+    <uvalib-catalog></uvalib-catalog>
 
-@element seed-element
+@element uvalib-catalog
 @blurb Element providing solution to no problem in particular.
 @status alpha
-@homepage http://polymerlabs.github.io/seed-element
+@homepage http://polymerlabs.github.io/uvalib-catalog
 -->
-<polymer-element name="seed-element" attributes="notitle author">
+<polymer-element name="uvalib-catalog" attributes="notitle author">
 
   <template>
 
-    <link rel="stylesheet" href="seed-element.css" />
+    <link rel="stylesheet" href="uvalib-catalog.css" />
     
-    <h1>Hello from seed-element</h1>
+    <h1>Hello from uvalib-catalog</h1>
     <content></content>
 
   </template>
 
   <script>
 
-    Polymer('seed-element', {
+    Polymer('uvalib-catalog', {
       /**
        * The `author` attribute sets an initial author
        * 
@@ -57,14 +57,14 @@ Element providing solution to no problem in particular.
        */
       sayHello: function(greeting) {
         var response = greeting || 'Hello World!';
-        return 'seed-element says, ' + response;
+        return 'uvalib-catalog says, ' + response;
       },
 
       /**
-       * The `seed-element-lasers-success` event is fired whenever we
+       * The `uvalib-catalog-lasers-success` event is fired whenever we
        * call fireLasers.
        * 
-       * @event seed-element-lasers-success
+       * @event uvalib-catalog-lasers-success
        */
 
       /**
@@ -74,7 +74,7 @@ Element providing solution to no problem in particular.
        * @method fireLasers
        */
       fireLasers: function() {
-        this.fire('seed-element-lasers-success', { sound: 'Pew pew pew!' });
+        this.fire('uvalib-catalog-lasers-success', { sound: 'Pew pew pew!' });
       }
 
     });

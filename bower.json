@@ -1,14 +1,14 @@
 {
-  "name": "seed-element",
+  "name": "uvalib-catalog",
   "version": "0.0.0",
   "authors": [
-    "Anonymous <anonymous@example.com>"
+    "Doug Chestnut <dougchestnut@gmail.com>"
   ],
-  "description": "Element providing solution to no problem in particular.",
-  "keywords": "seed, polymer, web-components",
-  "main": "seed-element.html",
+  "description": "Element providing access to the U.Va. Library Catalog.",
+  "keywords": "uva, library, catalog, polymer, web-components",
+  "main": "uvalib-catalog.html",
   "license": "MIT",
-  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "homepage": "https://github.com/<USERNAME>/uvalib-catalog/",
   "ignore": [
     "**/.*"
   ],
