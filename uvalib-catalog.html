@@ -100,6 +100,8 @@ Element providing interface to the U.Va. Library catalog.
        * 'fetch' is used to execute a query when the 'auto' attribute is not used.
        *
        * @method fetch
+       * @return {String} Returns a string greeting.
+       * @param {String} greeting Pass in a specific greeting
        */
       fetch: function() {
         console.log('fetch called');
@@ -177,62 +179,6 @@ Element providing interface to the U.Va. Library catalog.
 
     });
 
-
-/*
-    Polymer('uvalib-catalog', {
-      /**
-       * The `author` attribute sets an initial author
-       * 
-       * @attribute author
-       * @type string
-       *
-      author: 'Dimitri Glazkov',
-      
-      /**
-       * `fancy` is a property that does something fancy.
-       * 
-       * @property fancy
-       * @type bool
-       *
-      fancy: false,
-
-      ready: function() {
-        // Ready is a lifecycle callback.
-        // You can do setup work in here.
-        // More info: http://www.polymer-project.org/docs/polymer/polymer.html#lifecyclemethods
-      },
-
-      /**
-       * The `sayHello` method will return a greeting
-       * 
-       * @method sayHello
-       * @return {String} Returns a string greeting.
-       * @param {String} greeting Pass in a specific greeting
-       *
-      sayHello: function(greeting) {
-        var response = greeting || 'Hello World!';
-        return 'uvalib-catalog says, ' + response;
-      },
-
-      /**
-       * The `uvalib-catalog-lasers-success` event is fired whenever we
-       * call fireLasers.
-       * 
-       * @event uvalib-catalog-lasers-success
-       */
-
-      /**
-       * The `fireLasers` method will fire the lasers. At least
-       * it will dispatch an event that claims lasers were fired :)
-       * 
-       * @method fireLasers
-       *
-      fireLasers: function() {
-        this.fire('uvalib-catalog-lasers-success', { sound: 'Pew pew pew!' });
-      }
-
-    });
-*/
   </script>
 
 </polymer-element>
