@@ -7,12 +7,23 @@
   <script src="../platform/platform.js"></script>
   <link rel="import" href="uvalib-catalog.html">
 
+  <polymer-element name="cat-demo" assetpath="" attributes="title" noscript>
+  	<template>
+  		<label for="title">Title query:</label>
+  		<input id="title" placeholder="title query" value="{{titleQuery}}"/>
+  		<uvalib-catalog items="{{items}}" titleQuery='{{titleQuery}}' inclusiveFacets='{"library_facet":["Alderman"],"format_facet":["Book", "Broadside", "Government Documents", "Journal Magazine", "Large Print", "Manuscript", "Map", "Microform", "Mixed Materials", "Newspaper", "Other Media", "Photographs", "Physical Object", "Print", "Thesis%2FDissertation"]}' auto></uvalib-catalog>
+  		<ol>
+  		<template repeat="{{item in items}}">
+  		  <li>{{item.title_display}}</li>
+  		</template>
+  		</ol>
+  	</template>
+  </polymer-element>
 </head>
 <body unresolved>
 
   <p>An example of using <code>&lt;uvalib-catalog></code>:</p>
-
-  <uvalib-catalog auto="true"></uvalib-catalog>
+  <cat-demo></cat-demo>
 
 </body>
 </html>
