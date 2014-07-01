@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer-jsonp/polymer-jsonp.html">
 
 <!--
 Element providing interface to the U.Va. Library catalog.
@@ -10,20 +11,70 @@ Element providing interface to the U.Va. Library catalog.
 @element uvalib-catalog
 @blurb Element providing solution to no problem in particular.
 @status alpha
-@homepage http://polymerlabs.github.io/uvalib-catalog
+@homepage http://dougchestnut.github.io/uvalib-catalog
 -->
-<polymer-element name="uvalib-catalog" attributes="auto query title count page facetQuery sort sortField items">
+<polymer-element name="uvalib-catalog" attributes="auto query titleQuery count page facetQuery sort sortField items inclusiveFacets">
 
   <template>
-    
-    <polymer-jsonp id="jsonp" auto?={{auto}} url="http://www2.lib.virginia.edu/mobileAPI/catalog.json?f_inclusive%5Blibrary_facet%5D%5BAlderman%5D=1&f_inclusive%5Bformat_facet%5D%5BBook%5D=1&f_inclusive%5Bformat_facet%5D%5BBroadside%5D=1&f_inclusive%5Bformat_facet%5D%5BGovernment+Document%5D=1&f_inclusive%5Bformat_facet%5D%5BJournal%2FMagazine%5D=1&f_inclusive%5Bformat_facet%5D%5BLarge+Print%5D=1&f_inclusive%5Bformat_facet%5D%5BManuscript%5D=1&f_inclusive%5Bformat_facet%5D%5BMap%5D=1&f_inclusive%5Bformat_facet%5D%5BMicroform%5D=1&f_inclusive%5Bformat_facet%5D%5BMixed+Materials%5D=1&f_inclusive%5Bformat_facet%5D%5BNewspaper%5D=1&f_inclusive%5Bformat_facet%5D%5BOther+Media%5D=1&f_inclusive%5Bformat_facet%5D%5BPhotographs%5D=1&f_inclusive%5Bformat_facet%5D%5BPhysical+Object%5D=1&f_inclusive%5Bformat_facet%5D%5BPrint%5D=1&f_inclusive%5Bformat_facet%5D%5BThesis%2FDissertation%5D=1&catalog_select=catalog&op=AND&author=&title={{query}}&journal=&subject=&keyword=&call_number=&published=&publication_date_start=&publication_date_end=&sort_key=relevancy&search_field=advanced&commit=Search&callback=" response="{{response}}" on-polymer-response="{{onJSONPResponse}}"></polymer-jsonp>  
+    <!-- auto?={{auto}} -->
+    <polymer-jsonp id="jsonp" auto url="{{rawURL}}" response="{{response}}" on-polymer-response="{{onJSONPResponse}}"></polymer-jsonp>  
 
   </template>
 
   <script src="../sprintf/dist/sprintf.min.js"></script>
   <script>
 
-    Polymer('uvalib-catalog-api', {
+/*
+&catalog_select=catalog&op=AND&author=&title={{query}}&journal=&subject=&keyword=&call_number=&published=&publication_date_start=&publication_date_end=&sort_key=relevancy&search_field=advanced&commit=Search&callback=
+*/
+
+
+    Polymer('uvalib-catalog', {
+      rawURL: "",
+      catalogURL: "http://www2.lib.virginia.edu/mobileAPI/catalog.json?",
+      params: "catalog_select=catalog&op=AND&author=&journal=&subject=&keyword=&call_number=&published=&publication_date_start=&publication_date_end=&sort_key=relevancy&search_field=advanced&commit=Search&",
+      
+
+      /**
+       * Inclusive facets name values object for filtering results.
+       * Example: {"library_facet":["Alderman"],"format_facet":["Book", "Broadside", "Government Documents", "Journal Magazine", "Large Print", "Manuscript", "Map", "Microform", "Mixed Materials", "Newspaper", "Other Media", "Photographs", "Physical Object", "Print", "Thesis%2FDissertation"]}
+       *
+       * @attribute inclusiveFacets
+       * @type JSON
+       */
+      inclusiveFacets: "",
+
+      inclusiveFacetsEnc: "",
+      inclusiveFacetsChanged: function(){
+        var tmp = "";
+        var incFacetsObj = JSON.parse(this.inclusiveFacets);
+        for (var facet in incFacetsObj) {
+          for (var i=0; i<incFacetsObj[facet].length; i++) {
+            tmp += "f_inclusive["+facet+"]["+incFacetsObj[facet][i]+"]=1&";
+          }
+        }
+        this.inclusiveFacetsEnc = tmp;
+        this.makeURL();
+      },
+      makeURL: function(){
+        this.rawURL = this.catalogURL + 
+                      this.inclusiveFacetsEnc +  
+                      "title=" + this.titleQuery + "&" +
+                      "per_page=" + this.count + "&" +
+//                      "q=" + this.query + "&" + 
+                      this.params + 
+                      "callback=";
+      },
+
+      /**
+       * Query the title field.
+       *
+       * @attribute titleQuery
+       * @type string (Lucene Query)
+       */
+      titleQuery: "",
+      titleQueryChanged: function(){this.makeURL();},
+
       /**
        * The `catalog-response` event is fired when a response has been received from a query. 
        *
@@ -31,7 +82,7 @@ Element providing interface to the U.Va. Library catalog.
        */
 
       /**
-       * If true, automatically performs a request when url changes.
+       * If true, automatically performs a request when added to the dom and when the elements attributes change.
        *
        * @attribute auto
        * @type bool
@@ -108,6 +159,7 @@ Element providing interface to the U.Va. Library catalog.
       },
 
       ready: function() {
+    
       },
 
       stringFacets: function(facets){
