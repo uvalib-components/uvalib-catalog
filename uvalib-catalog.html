@@ -2,7 +2,7 @@
 <link rel="import" href="../polymer-jsonp/polymer-jsonp.html">
 
 <!--
-Element providing interface to the U.Va. Library catalog.
+Element providing interface to the U.Va. Library catalog.  An attempt to make reuse of the Library's catalog (http://search.lib.virginia.edu) easy.
 
 ##### Example
 
@@ -13,7 +13,7 @@ Element providing interface to the U.Va. Library catalog.
 @status alpha
 @homepage http://dougchestnut.github.io/uvalib-catalog
 -->
-<polymer-element name="uvalib-catalog" attributes="auto query titleQuery count page facetQuery sort sortField items inclusiveFacets">
+<polymer-element name="uvalib-catalog" attributes="auto query titleQuery count page facetQuery sort sortField items inclusiveFacetsJSON inclusiveFacets facets">
 
   <template>
     <!-- auto?={{auto}} -->
@@ -24,41 +24,40 @@ Element providing interface to the U.Va. Library catalog.
   <script src="../sprintf/dist/sprintf.min.js"></script>
   <script>
 
-/*
-&catalog_select=catalog&op=AND&author=&title={{query}}&journal=&subject=&keyword=&call_number=&published=&publication_date_start=&publication_date_end=&sort_key=relevancy&search_field=advanced&commit=Search&callback=
-*/
-
-
     Polymer('uvalib-catalog', {
       rawURL: "",
       catalogURL: "http://www2.lib.virginia.edu/mobileAPI/catalog.json?",
-      params: "catalog_select=catalog&op=AND&author=&journal=&subject=&keyword=&call_number=&published=&publication_date_start=&publication_date_end=&sort_key=relevancy&search_field=advanced&commit=Search&",
+      params: "op=AND&author=&journal=&subject=&keyword=&call_number=&published=&publication_date_start=&publication_date_end=&sort_key=relevancy&search_field=advanced&",
       
-
       /**
-       * Inclusive facets name values object for filtering results.
+       * The `inclusiveFacetsJSON` attribute limits results to facets specified by JSON object when specified.
        * Example: {"library_facet":["Alderman"],"format_facet":["Book", "Broadside", "Government Documents", "Journal Magazine", "Large Print", "Manuscript", "Map", "Microform", "Mixed Materials", "Newspaper", "Other Media", "Photographs", "Physical Object", "Print", "Thesis%2FDissertation"]}
        *
-       * @attribute inclusiveFacets
+       * @attribute inclusiveFacetsJSON
        * @type JSON
        */
-      inclusiveFacets: "",
+      inclusiveFacetsJSON: "",
 
-      inclusiveFacetsEnc: "",
-      inclusiveFacetsChanged: function(){
-        var tmp = "";
-        var incFacetsObj = JSON.parse(this.inclusiveFacets);
-        for (var facet in incFacetsObj) {
-          for (var i=0; i<incFacetsObj[facet].length; i++) {
-            tmp += "f_inclusive["+facet+"]["+incFacetsObj[facet][i]+"]=1&";
+      inclusiveFacetsParams: "",
+      inclusiveFacetsJSONChanged: function(){
+        try {
+          var tmp = "";
+          var incFacetsObj = JSON.parse(this.inclusiveFacetsJSON);
+          for (var facet in incFacetsObj) {
+            for (var i=0; i<incFacetsObj[facet].length; i++) {
+              tmp += "f_inclusive["+facet+"]["+incFacetsObj[facet][i]+"]=1&";
+            }
           }
+          this.inclusiveFacetsParams = tmp;
+        } catch(e) {
+          // didn't parse
+          this.inclusiveFacetParams = "";
         }
-        this.inclusiveFacetsEnc = tmp;
         this.makeURL();
       },
       makeURL: function(){
         this.rawURL = this.catalogURL + 
-                      this.inclusiveFacetsEnc +  
+                      this.inclusiveFacetsParams +  
                       "title=" + this.titleQuery + "&" +
                       "per_page=" + this.count + "&" +
 //                      "q=" + this.query + "&" + 
@@ -106,7 +105,7 @@ Element providing interface to the U.Va. Library catalog.
        count: 20,
 
       /**
-       * The `page` attribute will specify the subset of results to return (along with the count)
+       * The `page` attribute will specify the subset of results to return (based on count)
        *
        * @attribute page
        * @type int
@@ -131,12 +130,20 @@ Element providing interface to the U.Va. Library catalog.
        sort: 'score+desc,+year_multisort_i+desc',
 
       /**
-       * The `items` attribute is where the results catalog items are stored
+       * The `items` attribute is where the catalog result items are stored
        *
        * @attribute items
        * @type Array
        */
       items: [],
+
+      /**
+       * The `facets` attribute is where the result facets and counts are stored
+       *
+       * @attribute facets
+       * @type Object
+       */
+      facets: {},
 
       /**
        * The `response` is a property that holds the response from the catalogs api.
@@ -154,7 +161,6 @@ Element providing interface to the U.Va. Library catalog.
        * @param {String} greeting Pass in a specific greeting
        */
       fetch: function() {
-        console.log('fetch called');
         this.$.jsonp.go();
       },
 
@@ -175,6 +181,7 @@ Element providing interface to the U.Va. Library catalog.
 
       responseChanged: function(oldValue, newValue){
         this.items = this.response.response.docs;
+        this.facets = this.response['facet_counts']['facet_fields'];
         this.normalizeCallnumbers();
       },
 
