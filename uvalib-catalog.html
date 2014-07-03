@@ -97,12 +97,13 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
       query: '',
 
       /**
-       * The `count` attribute will limit the results returned from a request.
+       * The `count` attribute will limit the results returned from a request. Max count is 100.
        *
        * @attribute count
        * @type int
        */
        count: 20,
+       countChanged: function(){this.makeURL();},
 
       /**
        * The `page` attribute will specify the subset of results to return (based on count)
