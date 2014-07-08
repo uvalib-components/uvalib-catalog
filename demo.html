@@ -7,6 +7,7 @@
   <script src="../platform/platform.js"></script>
   <link rel="import" href="../paper-input/paper-input.html">
   <link rel="import" href="../paper-slider/paper-slider.html">
+  <link rel="import" href="../paper-toggle-button/paper-toggle-button.html">
   <link rel="import" href="../core-scaffold/core-scaffold.html">
   <link rel="import" href="../core-header-panel/core-header-panel.html">
   <link rel="import" href="../core-toolbar/core-toolbar.html">
@@ -62,7 +63,7 @@
       			}
     	</style>
 
-  		<uvalib-catalog items="{{items}}" titleQuery='{{titleQuery}}' inclusiveFacetsJSON='{{includeFacets}}' count="{{count}}" auto></uvalib-catalog>
+  		<uvalib-catalog items="{{items}}" query="{{query}}" titleQuery='{{titleQuery}}' inclusiveFacetsJSON='{{includeFacets}}' count="{{count}}" auto advanced?="{{advanced}}"></uvalib-catalog>
 
   		<core-scaffold id="core_scaffold">
       		<core-header-panel mode="seamed" id="core_header_panel" navigation flex>
@@ -70,10 +71,21 @@
         		<section id="section" layout vertical>
           			<section id="section1" flex relative>
             			
-						<paper-input label="Title Query" floatinglabel value="{{titleQuery}}"></paper-input>
+            			<label for="toggleAdvanced">Advanced Search</label>
+          				<paper-toggle-button id="toggleAdvanced" toggles checked="{{advanced}}"></paper-toggle-button><br><hr>
+						
+						<div id="simple" style="{{advanced? 'display:none':''}}">
+						<paper-input label="Query" floatinglabel value="{{query}}"></paper-input><br>
+						</div>
+						<div id="advanced" style="{{advanced? '':'display:none'}}">
+						<paper-input label="Title Query" floatinglabel value="{{titleQuery}}"></paper-input><br>
+  						<paper-input label="Include Facets JSON:" floatinglabel multiline value="{{includeFacets}}"></paper-input>
+  						</div>
+  						<br><br>
+
   						<div><span>Result Count</span> {{count}}</div><br>
     					<paper-slider pin snaps max="100" step="5" value="{{count}}"></paper-slider>
-						<paper-input label="Include Facets JSON:" floatinglabel multiline value="{{includeFacets}}"></paper-input>
+						
 
           			</section>
         		</section>
@@ -92,7 +104,8 @@
   	<script>
   		Polymer('cat-demo',{
   			includeFacets: '{"library_facet":["Alderman"],"format_facet":["Book", "Broadside", "Journal Magazine", "Large Print", "Manuscript", "Map", "Microform", "Mixed Materials", "Newspaper", "Other Media", "Photographs", "Physical Object", "Print", "Thesis%2FDissertation"]}',
-  			count:10
+  			count:10,
+  			advanced:true
   		});
   	</script>
   </polymer-element>

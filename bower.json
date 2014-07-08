@@ -20,6 +20,7 @@
     "mocha": "~1.19.0",
     "paper-input": "Polymer/paper-input#~0.3.3",
     "paper-slider": "Polymer/paper-slider#~0.3.3",
+    "paper-toggle-button": "Polymer/paper-toggle-button",
     "core-scaffold": "Polymer/core-scaffold#~0.3.3"
   }
 }

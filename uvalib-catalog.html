@@ -13,7 +13,7 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
 @status alpha
 @homepage http://dougchestnut.github.io/uvalib-catalog
 -->
-<polymer-element name="uvalib-catalog" attributes="auto query titleQuery count page facetQuery sort sortField items inclusiveFacetsJSON inclusiveFacets facets">
+<polymer-element name="uvalib-catalog" attributes="advanced auto query titleQuery count page facetQuery sort sortField items inclusiveFacetsJSON inclusiveFacets facets">
 
   <template>
     <!-- auto?={{auto}} -->
@@ -56,13 +56,18 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
         this.makeURL();
       },
       makeURL: function(){
-        this.rawURL = this.catalogURL + 
-                      this.inclusiveFacetsParams +  
-                      "title=" + this.titleQuery + "&" +
-                      "per_page=" + this.count + "&" +
-//                      "q=" + this.query + "&" + 
-                      this.params + 
-                      "callback=";
+        if (this.advanced)
+          this.rawURL = this.catalogURL + 
+                        this.inclusiveFacetsParams +  
+                        "title=" + this.titleQuery + "&" +
+                        "per_page=" + this.count + "&" +
+                        this.params + 
+                        "callback=";
+        else
+          this.rawURL = this.catalogURL + 
+                        "per_page=" + this.count + "&" +
+                        "q=" + this.query + "&" +
+                        "callback=";
       },
 
       /**
@@ -81,6 +86,17 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
        */
 
       /**
+       * If true, then query uses advanced attributes.
+       *
+       * @attribute advanced
+       * @type bool
+       */
+      advanced: false,
+      advancedChanged: function(){
+        this.makeURL();
+      },
+
+      /**
        * If true, automatically performs a request when added to the dom and when the elements attributes change.
        *
        * @attribute auto
@@ -95,6 +111,9 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
        * @type string
        */
       query: '',
+      queryChanged: function(){
+        this.makeURL();
+      },
 
       /**
        * The `count` attribute will limit the results returned from a request. Max count is 100.
@@ -188,7 +207,8 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
 
       normalizeCallnumbers: function(){
         for (var i=0; i<this.items.length; i++) {
-          this.items[i].normalizedCallNum = this.normalizeCallnumber(this.items[i]['call_number_display'][0] );
+          if (this.items[i]['call_number_display'] && this.items[i]['call_number_display'].length)
+            this.items[i].normalizedCallNum = this.normalizeCallnumber(this.items[i]['call_number_display'][0] );
         }
       },
 
