@@ -29,90 +29,80 @@
     }
 
   </style>
+            <style>    
+          :host {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              box-sizing: border-box;
+            }
+            #core_scaffold {
+              position: absolute;
+              top: 0px;
+              right: 0px;
+              bottom: 0px;
+              left: 0px;
+            }
+            #core_header_panel {
+              background-color: rgb(255, 255, 255);
+            }
+            #core_toolbar {
+              color: rgb(255, 255, 255);
+              background-color: rgb(79, 125, 201);
+            }
+            #section {
+              width: 100%;
+              height: 630px;
+              border: 5px solid rgb(204, 204, 204);
+            }
+            paper-input {
+              width: 90%;
+            }
+      </style>
 
-  <polymer-element name="cat-demo" assetpath="" attributes="">
-  	<template>
-  		    <style>    
-		    	:host {
-        			position: absolute;
-        			width: 100%;
-        			height: 100%;
-        			box-sizing: border-box;
-      			}
-      			#core_scaffold {
-        			position: absolute;
-        			top: 0px;
-        			right: 0px;
-        			bottom: 0px;
-        			left: 0px;
-      			}
-      			#core_header_panel {
-        			background-color: rgb(255, 255, 255);
-      			}
-      			#core_toolbar {
-        			color: rgb(255, 255, 255);
-        			background-color: rgb(79, 125, 201);
-      			}
-      			#section {
-        			width: 100%;
-        			height: 630px;
-        			border: 5px solid rgb(204, 204, 204);
-      			}
-      			paper-input {
-      				width: 90%;
-      			}
-    	</style>
-
-  		<uvalib-catalog items="{{items}}" query="{{query}}" titleQuery='{{titleQuery}}' inclusiveFacetsJSON='{{includeFacets}}' count="{{count}}" auto advanced?="{{advanced}}"></uvalib-catalog>
-
-  		<core-scaffold id="core_scaffold">
-      		<core-header-panel mode="seamed" id="core_header_panel" navigation flex>
-        		<core-toolbar id="core_toolbar"></core-toolbar>
-        		<section id="section" layout vertical>
-          			<section id="section1" flex relative>
-            			
-            			<label for="toggleAdvanced">Advanced Search</label>
-          				<paper-toggle-button id="toggleAdvanced" toggles checked="{{advanced}}"></paper-toggle-button><br><hr>
-						
-						<div id="simple" style="{{advanced? 'display:none':''}}">
-						<paper-input label="Query" floatinglabel value="{{query}}"></paper-input><br>
-						</div>
-						<div id="advanced" style="{{advanced? '':'display:none'}}">
-						<paper-input label="Title Query" floatinglabel value="{{titleQuery}}"></paper-input><br>
-  						<paper-input label="Include Facets JSON:" floatinglabel multiline value="{{includeFacets}}"></paper-input>
-  						</div>
-  						<br><br>
-
-  						<div><span>Result Count</span> {{count}}</div><br>
-    					<paper-slider pin snaps max="100" step="5" value="{{count}}"></paper-slider>
-						
-
-          			</section>
-        		</section>
-      		</core-header-panel>
-      		<div id="div" tool>uvalib-catalog element demo</div>
-      		<div id="main">
-      			<ol>
-	  				<template repeat="{{item in items}}">
-  			  			<li>{{item.title_display}}</li>
-  					</template>
-  				</ol>
-  			</div>
-    	</core-scaffold>
-
-  	</template>
-  	<script>
-  		Polymer('cat-demo',{
-  			includeFacets: '{"library_facet":["Alderman"],"format_facet":["Book", "Broadside", "Journal Magazine", "Large Print", "Manuscript", "Map", "Microform", "Mixed Materials", "Newspaper", "Other Media", "Photographs", "Physical Object", "Print", "Thesis%2FDissertation"]}',
-  			count:10,
-  			advanced:false
-  		});
-  	</script>
-  </polymer-element>
 </head>
 <body unresolved>
 
-  <cat-demo foobar="hello"></cat-demo>
+  <template is="auto-binding">
+
+      <uvalib-catalog items="{{items}}" query="{{query}}" titleQuery='{{titleQuery}}' inclusiveFacetsJSON='{{includeFacets}}' count="{{count}}" auto advanced?="{{advanced}}"></uvalib-catalog>
+
+      <core-scaffold id="core_scaffold">
+          <core-header-panel mode="seamed" id="core_header_panel" navigation flex>
+            <core-toolbar id="core_toolbar"></core-toolbar>
+            <section id="section" layout vertical>
+                <section id="section1" flex relative>
+                  
+                  <label for="toggleAdvanced">Advanced Search</label>
+                  <paper-toggle-button id="toggleAdvanced" toggles checked="{{advanced}}"></paper-toggle-button><br><hr>
+            
+            <div id="simple" style="{{advanced? 'display:none':''}}">
+            <paper-input label="Query" floatinglabel value="{{query}}"></paper-input><br>
+            </div>
+            <div id="advanced" style="{{advanced? '':'display:none'}}">
+            <paper-input label="Title Query" floatinglabel value="{{titleQuery}}"></paper-input><br>
+              <paper-input label="Include Facets JSON:" floatinglabel multiline value="{{includeFacets}}"></paper-input>
+              </div>
+              <br><br>
+
+              <div><span>Result Count</span> {{count}}</div><br>
+              <paper-slider pin snaps max="100" step="5" value="{{count}}"></paper-slider>
+            
+
+                </section>
+            </section>
+          </core-header-panel>
+          <div id="div" tool>uvalib-catalog element demo</div>
+          <div id="main">
+            <ol>
+            <template repeat="{{item in items}}">
+                <li>{{item.title_display}}</li>
+            </template>
+          </ol>
+        </div>
+      </core-scaffold>
+
+  </template>
 
 </body>
 </html>
