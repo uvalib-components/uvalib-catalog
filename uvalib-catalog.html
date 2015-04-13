@@ -70,6 +70,8 @@ Element providing an easy component access to the uva library's catalog.
        */
       items: null,
 
+      //advanced availability directions facetlimits page per_page
+
       /**
        * The `query` attribute sets the general query of the catalog search request
        *
@@ -78,6 +80,16 @@ Element providing an easy component access to the uva library's catalog.
        * @default ""
        */
       query: "",
+
+      /**
+       * The `sort_order` attribute sets the sort order of the catalog search results.
+       * Values can be one of "author", "published", "published_a", "received", "relevancy", or "title"
+       *
+       * @attribute sort_order
+       * @type string
+       * @default "relevancy"
+       */
+      'sort_order': "relevancy",
 
       /**
        * The `api` property is set to the Library's client catalog api once loaded
@@ -111,7 +123,8 @@ Element providing an easy component access to the uva library's catalog.
             this.requests[i].cancel=true;
 
           pack = {
-            query: this.query
+            query: this.query,
+            'sort_order': this['sort_order']
           };
 
           // Put a simple message into the requests queue for this request
