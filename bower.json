@@ -1,24 +1,17 @@
 {
   "name": "uvalib-catalog",
   "version": "0.0.0",
-  "authors": [
-    "Doug Chestnut <dougchestnut@gmail.com>"
+  "keywords": [
+    "seed",
+    "polymer",
+    "web-components"
   ],
-  "description": "Element providing access to the U.Va. Library Catalog.",
-  "keywords": "uva, library, catalog, polymer, web-components",
   "main": "uvalib-catalog.html",
-  "license": "MIT",
-  "homepage": "https://github.com/<USERNAME>/uvalib-catalog/",
-  "ignore": [
-    "**/.*"
-  ],
   "dependencies": {
-    "polymer": "Polymer/polymer",
-    "polymer-jsonp": "Polymer/polymer-jsonp",
-    "sprintf": "~1.0.0",
-    "paper-input": "Polymer/paper-input",
-    "paper-slider": "Polymer/paper-slider",
-    "paper-toggle-button": "Polymer/paper-toggle-button",
-    "core-scaffold": "Polymer/core-scaffold"
+    "polymer": "Polymer/polymer#^0.5.4",
+    "uvalib-api": "uvalib-components/uvalib-api"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.2.3"
   }
 }
