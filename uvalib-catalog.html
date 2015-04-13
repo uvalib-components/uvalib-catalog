@@ -13,12 +13,25 @@ Element providing an easy component access to the uva library's catalog.
 @status alpha
 @homepage http://uvalib-components.github.io/uvalib-catalog
 -->
-<polymer-element name="uvalib-catalog" attributes="auto count facets items">
+<polymer-element name="uvalib-catalog" attributes="auto count facets items advanced availability directions facetlimits page per_page query sort_order">
   <template>
     <uvalib-api on-uvalib-api-load="{{apiLoaded}}"></uvalib-api>
   </template>
   <script>
     Polymer({
+
+      observe: {
+        auto: 'fetch',
+        advanced: 'fetch',
+        availability: 'fetch',
+        directions: 'fetch',
+        facetlimits: 'fetch',
+        page: 'fetch',
+        'per_page': 'fetch',
+        query: 'fetch',
+        'sort_order': 'fetch'
+      },
+
       /**
        * The `auto` attribute set to true means that the catalog will be queried 
        * whenever a request attribute is changed.
@@ -58,6 +71,15 @@ Element providing an easy component access to the uva library's catalog.
       items: null,
 
       /**
+       * The `query` attribute sets the general query of the catalog search request
+       *
+       * @attribute query
+       * @type string
+       * @default ""
+       */
+      query: "",
+
+      /**
        * The `api` property is set to the Library's client catalog api once loaded
        *
        * @attribute api
@@ -72,13 +94,33 @@ Element providing an easy component access to the uva library's catalog.
           this.fetch();
       },
 
+      // Keep track of requests so that older ones can be ignored
+      // ToDo: see if we can cancel api requests before they return
+      requests:[],
+
       /**
        * The `fetch` method will make a query request against the catalog.
        *
        * @method fetch
        */
       fetch: function () {
-        this.api.search({}).execute( this.parseResults.bind(this) );
+        if (this.api) {
+
+          // Cancel all requests currently running
+          for (var i=0; i<this.requests.length; i++)
+            this.requests[i].cancel=true;
+
+          pack = {
+            query: this.query
+          };
+
+          // Put a simple message into the requests queue for this request
+          var mess = {cancel:false};
+          this.requests.push(mess);
+
+          this.api.search(pack).execute( this.parseResults.bind(this, mess) );
+          console.log('fetching catalog results!');
+        }
       },
 
       /**
@@ -87,12 +129,22 @@ Element providing an easy component access to the uva library's catalog.
        *
        * @event uvalib-catalog-fetched-results
        */
+      parseResults: function(mess, results){
+        if (!mess.cancel) {
+          this.count = results.count;
+          this.items = results.items;          
+          this.facets = results.facets;
+          this.fire('uvalib-catalog-fetched-results');
+        } else {
+          console.log('fetch canceled!');
+        }
 
-      parseResults: function(results){
-        this.count = results.count;
-        this.items = results.items;
-        this.facets = results.facets;
-        this.fire('uvalib-catalog-fetched-results');
+        // remove this requests message from the queue
+        for (var i=0; i<this.requests.length; i++)
+          if (mess == this.requests[i]) {
+            this.requests.splice(i,1);
+            break;
+          }
       }
       
     });

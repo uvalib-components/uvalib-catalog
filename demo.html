@@ -6,20 +6,17 @@
     <title>uvalib-catalog Demo</title>
     <script src="../webcomponentsjs/webcomponents.js"></script>
     <link rel="import" href="uvalib-catalog.html">
-    <link rel="import" href="../core-list/core-list.html">
   </head>
   <body unresolved fullbleed vertical layout>
     <template is="auto-binding">
       <p>An `uvalib-catalog` looks like this:</p>
-      <uvalib-catalog auto items="{{items}}" facets="{{facets}}" count="{{count}}"></uvalib-catalog>
+      <uvalib-catalog auto items="{{items}}" facets="{{facets}}" count="{{count}}" query="{{query}}"></uvalib-catalog>
+      <label for="query">Search Query</label>
+      <input id="query" value="{{query}}">
       <h2>Found {{count}} results</h2>
-      <core-list data="{{items}}" flex>
-        <template>
-          <div class="row {{ {selected: selected} | tokenList }}">
-            List row: {{index}}, Title: {{model.title}}
-          </div>
-        </template>
-      </core-list>
+      <ul>
+        <template repeat="{{i in items}}"><li>Title: {{i.title}}</li></template>
+      </ul>
     </template>
   </body>
 </html>

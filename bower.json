@@ -12,7 +12,6 @@
     "uvalib-api": "uvalib-components/uvalib-api"
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester#^2.2.3",
-    "core-list": "Polymer/core-list"
+    "web-component-tester": "Polymer/web-component-tester#^2.2.3"
   }
 }
