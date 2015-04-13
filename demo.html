@@ -8,7 +8,10 @@
     <link rel="import" href="uvalib-catalog.html">
   </head>
   <body unresolved>
-    <p>An `uvalib-catalog` looks like this:</p>
-    <uvalib-catalog auto></uvalib-catalog>
+    <template is="auto-binding">
+      <p>An `uvalib-catalog` looks like this:</p>
+      <uvalib-catalog auto items="items" facets="facets" count="{{count}}"></uvalib-catalog>
+      <h2>Found {{count}} results</h2>
+    </template>
   </body>
 </html>
