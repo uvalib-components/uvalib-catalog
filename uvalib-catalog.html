@@ -13,7 +13,7 @@ Element providing an easy component access to the uva library's catalog.
 @status alpha
 @homepage http://uvalib-components.github.io/uvalib-catalog
 -->
-<polymer-element name="uvalib-catalog" attributes="auto count facets items availability directions facetlimits page per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end">
+<polymer-element name="uvalib-catalog" attributes="auto count facets items availability directions page per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json">
   <template>
     <uvalib-api on-uvalib-api-load="{{apiLoaded}}"></uvalib-api>
   </template>
@@ -22,14 +22,22 @@ Element providing an easy component access to the uva library's catalog.
 
       observe: {
         auto: 'fetch',
-        advanced: 'fetch',
         availability: 'fetch',
         directions: 'fetch',
-        facetlimits: 'fetch',
         page: 'fetch',
-        'per_page': 'fetch',
+        per_page: 'fetch',
         query: 'fetch',
-        'sort_order': 'fetch'
+        sort_order: 'fetch',
+        operator: 'fetch',
+        author: 'fetch',
+        title_query: 'fetch',
+        journal_title: 'fetch',
+        subject: 'fetch',
+        keywords: 'fetch',
+        call_number: 'fetch',
+        publisher: 'fetch',
+        year_published_start: 'fetch',
+        year_published_end: 'fetch'
       },
 
       /**
@@ -53,7 +61,7 @@ Element providing an easy component access to the uva library's catalog.
       count: null,
 
       /**
-       * The `facets` attribute is set with the facet counts for a catalog request
+       * The `facets` attribute is set with the facets in a catalog response
        *
        * @attribute facets
        * @type object
@@ -88,7 +96,6 @@ Element providing an easy component access to the uva library's catalog.
        */ 
       directions: false, 
 
-      //facetlimits 
 
       /**
        * The `page` attribute specifies the page of results to return from the catalog search
@@ -106,7 +113,7 @@ Element providing an easy component access to the uva library's catalog.
        * @type integer
        * @default 10
        */      
-      'per_page': 10,
+      per_page: 10,
 
       /**
        * The `query` attribute sets the general query of the catalog search request
@@ -125,7 +132,7 @@ Element providing an easy component access to the uva library's catalog.
        * @type string
        * @default "relevancy"
        */
-      'sort_order': "relevancy",
+      sort_order: "relevancy",
 
       /**
        * The `operator` attribute sets the operator used for the advanced fields.  Options are 'AND' and 'OR'.
@@ -152,7 +159,7 @@ Element providing an easy component access to the uva library's catalog.
        * @type string
        * @default ""
        */
-      'title_query':'',
+      title_query:'',
 
       /**
        * The `journal_title` attribute sets the advanced query for journal_title
@@ -161,7 +168,7 @@ Element providing an easy component access to the uva library's catalog.
        * @type string
        * @default ""
        */
-      'journal_title':'',
+      journal_title:'',
 
       /**
        * The `subject` attribute sets the advanced query for subject
@@ -188,7 +195,7 @@ Element providing an easy component access to the uva library's catalog.
        * @type string
        * @default ""
        */
-      'call_number':'',
+      call_number:'',
 
       /**
        * The `publisher` attribute sets the advanced query for publisher
@@ -206,7 +213,7 @@ Element providing an easy component access to the uva library's catalog.
        * @type string
        * @default ""
        */
-      'year_published_start':'',
+      year_published_start:'',
 
       /**
        * The `year_published_end` attribute sets the advanced query for year_published_end
@@ -215,7 +222,25 @@ Element providing an easy component access to the uva library's catalog.
        * @type string
        * @default ""
        */
-      'year_published_end':'',
+      year_published_end:'',
+
+      /**
+       * The `facet_limits` attribute limits the results to those matching the facets (ex: {"library":"Alderman"} or {"library":["Alderman","Law Library"]})
+       *
+       * @attribute facet_limits
+       * @type object
+       * @default null
+       */
+      facet_limits:null,
+
+      /**
+       * The `facet_limits_json` attribute is a mirror of (and bound to) the facet_limits attribute.  The only difference is that this attribute is in json format (string)
+       *
+       * @attribute facet_limits_json
+       * @type string
+       * @default null
+       */
+      facet_limits_json:null,
 
       /**
        * The `api` property is set to the Library's client catalog api once loaded
@@ -230,6 +255,19 @@ Element providing an easy component access to the uva library's catalog.
         this.api = e.detail.catalog;
         if (this.auto)
           this.fetch();
+      },
+
+      facet_limitsChanged: function() {
+        var fl = JSON.stringify(this.facet_limits);
+        if (!fl === this.facet_limits_json)
+          this.facet_limits_json = fl;
+      },
+
+      facet_limits_jsonChanged: function() {
+        if (!JSON.stringify(this.facet_limits) === this.facet_limits_json) {
+          this.facet_limits = JSON.parse(this.facet_limits_json);
+        }
+        this.fetch();
       },
 
       // Keep track of requests so that older ones can be ignored
@@ -248,29 +286,30 @@ Element providing an easy component access to the uva library's catalog.
           for (var i=0; i<this.requests.length; i++)
             this.requests[i].cancel=true;
 
-          pack = {
+          var req_pack = {
             availability: this.availability,
             page: this.page,
-            'per_page': this['per_page'],
+            per_page: this['per_page'],
             query: this.query,
-            'sort_order': this['sort_order'],
+            sort_order: this['sort_order'],
             operator: this.operator,
             author: this.author,
             title: this['title_query'],
-            'journal_title': this['journal_title'],
+            journal_title: this['journal_title'],
             subject: this.subject,
             keywords: this.keywords,
-            'call_number': this['call_number'],
+            call_number: this['call_number'],
             publisher: this.publisher,
-            'year_published_start': this['year_published_start'],
-            'year_published_end': this['year_published_end']
-          };
+            year_published_start: this['year_published_start'],
+            year_published_end: this['year_published_end'],
+            facets: this.facet_limits_json
+            };
 
           // Put a simple message into the requests queue for this request
           var mess = {cancel:false};
           this.requests.push(mess);
 
-          this.api.search(pack).execute( this.parseResults.bind(this, mess) );
+          this.api.search(req_pack).execute( this.parseResults.bind(this, mess) );
           console.log('fetching catalog results!');
         }
       },
