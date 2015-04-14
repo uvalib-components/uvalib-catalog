@@ -13,7 +13,7 @@ Element providing an easy component access to the uva library's catalog.
 @status alpha
 @homepage http://uvalib-components.github.io/uvalib-catalog
 -->
-<polymer-element name="uvalib-catalog" attributes="auto count facets items advanced availability directions facetlimits page per_page query sort_order">
+<polymer-element name="uvalib-catalog" attributes="auto count facets items availability directions facetlimits page per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end">
   <template>
     <uvalib-api on-uvalib-api-load="{{apiLoaded}}"></uvalib-api>
   </template>
@@ -70,7 +70,34 @@ Element providing an easy component access to the uva library's catalog.
        */
       items: null,
 
-      //advanced availability directions facetlimits page 
+      /**
+       * The `availability` attribute specifies wheather the results should include availability info (at the cost of a slower response)
+       *
+       * @attribute availability
+       * @type boolean
+       * @default false
+       */ 
+      availability: false, 
+
+      /**
+       * The `directions` attribute specifies wheather the results should include directions info
+       *
+       * @attribute directions
+       * @type boolean
+       * @default false
+       */ 
+      directions: false, 
+
+      //facetlimits 
+
+      /**
+       * The `page` attribute specifies the page of results to return from the catalog search
+       *
+       * @attribute page
+       * @type integer
+       * @default 1
+       */ 
+      page: 1, 
 
       /**
        * The `per_page` attribute limits the number of results returned in the catalog search result
@@ -99,6 +126,96 @@ Element providing an easy component access to the uva library's catalog.
        * @default "relevancy"
        */
       'sort_order': "relevancy",
+
+      /**
+       * The `operator` attribute sets the operator used for the advanced fields.  Options are 'AND' and 'OR'.
+       *
+       * @attribute query
+       * @type string
+       * @default "AND"
+       */
+      operator:'AND',
+
+      /**
+       * The `author` attribute sets the advanced query for author
+       *
+       * @attribute author
+       * @type string
+       * @default ""
+       */
+      author:'',
+
+      /**
+       * The `title` attribute sets the advanced query for title
+       *
+       * @attribute title
+       * @type string
+       * @default ""
+       */
+      'title_query':'',
+
+      /**
+       * The `journal_title` attribute sets the advanced query for journal_title
+       *
+       * @attribute journal_title
+       * @type string
+       * @default ""
+       */
+      'journal_title':'',
+
+      /**
+       * The `subject` attribute sets the advanced query for subject
+       *
+       * @attribute subject
+       * @type string
+       * @default ""
+       */
+      subject:'',
+
+      /**
+       * The `keywords` attribute sets the advanced query for keywords
+       *
+       * @attribute keywords
+       * @type string
+       * @default ""
+       */
+      keywords:'',
+
+      /**
+       * The `call_number` attribute sets the advanced query for call_number
+       *
+       * @attribute call_number
+       * @type string
+       * @default ""
+       */
+      'call_number':'',
+
+      /**
+       * The `publisher` attribute sets the advanced query for publisher
+       *
+       * @attribute publisher
+       * @type string
+       * @default ""
+       */
+      publisher:'',
+
+      /**
+       * The `year_published_start` attribute sets the advanced query for year_published_start
+       *
+       * @attribute year_published_start
+       * @type string
+       * @default ""
+       */
+      'year_published_start':'',
+
+      /**
+       * The `year_published_end` attribute sets the advanced query for year_published_end
+       *
+       * @attribute year_published_end
+       * @type string
+       * @default ""
+       */
+      'year_published_end':'',
 
       /**
        * The `api` property is set to the Library's client catalog api once loaded
@@ -132,9 +249,21 @@ Element providing an easy component access to the uva library's catalog.
             this.requests[i].cancel=true;
 
           pack = {
+            availability: this.availability,
+            page: this.page,
             'per_page': this['per_page'],
             query: this.query,
-            'sort_order': this['sort_order']
+            'sort_order': this['sort_order'],
+            operator: this.operator,
+            author: this.author,
+            title: this['title_query'],
+            'journal_title': this['journal_title'],
+            subject: this.subject,
+            keywords: this.keywords,
+            'call_number': this['call_number'],
+            publisher: this.publisher,
+            'year_published_start': this['year_published_start'],
+            'year_published_end': this['year_published_end']
           };
 
           // Put a simple message into the requests queue for this request

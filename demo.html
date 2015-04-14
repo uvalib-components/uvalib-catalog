@@ -10,13 +10,24 @@
   <body unresolved fullbleed vertical layout>
     <template is="auto-binding">
       <p>An `uvalib-catalog` looks like this:</p>
-      <uvalib-catalog auto items="{{items}}" facets="{{facets}}" count="{{count}}" query="{{query}}" per_page="20"></uvalib-catalog>
-      <label for="query">Search Query</label>
-      <input id="query" value="{{query}}">
+
+      <uvalib-catalog auto items="{{items}}" facets="{{facets}}" count="{{count}}" query="{{query}}" per_page="20" sort_order="{{sort}}"></uvalib-catalog>
+
+      <label for="query">Search Query</label><input id="query" value="{{query}}"><br />
+      <label for="sort">Sort Order</label>
+      <select id="sort" value="{{sort}}">
+        <option>author</option>
+        <option>published</option>
+        <option>published_a</option>
+        <option>received</option>
+        <option selected>relevancy</option>
+        <option>title</option>
+      </select>
       <h2>Found {{count}} results</h2>
       <ul>
         <template repeat="{{i in items}}"><li>Title: {{i.title}}</li></template>
       </ul>
+
     </template>
   </body>
 </html>
