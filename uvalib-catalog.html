@@ -13,7 +13,7 @@ Element providing an easy component access to the uva library's catalog.
 @status alpha
 @homepage http://uvalib-components.github.io/uvalib-catalog
 -->
-<polymer-element name="uvalib-catalog" attributes="auto count facets items availability directions page per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json">
+<polymer-element name="uvalib-catalog" attributes="auto append count facets items availability directions page per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json facet_limits_inc facet_limits_inc_json more">
   <template>
     <uvalib-api on-uvalib-api-load="{{apiLoaded}}"></uvalib-api>
   </template>
@@ -21,23 +21,23 @@ Element providing an easy component access to the uva library's catalog.
     Polymer({
 
       observe: {
-        auto: 'fetch',
-        availability: 'fetch',
-        directions: 'fetch',
-        page: 'fetch',
-        per_page: 'fetch',
-        query: 'fetch',
-        sort_order: 'fetch',
-        operator: 'fetch',
-        author: 'fetch',
-        title_query: 'fetch',
-        journal_title: 'fetch',
-        subject: 'fetch',
-        keywords: 'fetch',
-        call_number: 'fetch',
-        publisher: 'fetch',
-        year_published_start: 'fetch',
-        year_published_end: 'fetch'
+        auto: function(){this.fetch(false);},
+        availability: function(){this.fetch(false);},
+        directions: function(){this.fetch(false);},
+        page: function(){this.fetch(true);},
+        per_page: function(){this.fetch(false);},
+        query: function(){this.fetch(false);},
+        sort_order: function(){this.fetch(false);},
+        operator: function(){this.fetch(false);},
+        author: function(){this.fetch(false);},
+        title_query: function(){this.fetch(false);},
+        journal_title: function(){this.fetch(false);},
+        subject: function(){this.fetch(false);},
+        keywords: function(){this.fetch(false);},
+        call_number: function(){this.fetch(false);},
+        publisher: function(){this.fetch(false);},
+        year_published_start: function(){this.fetch(false);},
+        year_published_end: function(){this.fetch(false);}
       },
 
       /**
@@ -51,6 +51,15 @@ Element providing an easy component access to the uva library's catalog.
       auto: false,
 
       /**
+       * The `append` attribute set to true means that the items returned from a search will append the current list of items
+       *
+       * @attribute append
+       * @type bool
+       * @default false
+       */
+      append: false,
+
+      /**
        * The `count` attribute is set to the total query result count from the 
        * catalog once a request has been fetched
        *
@@ -59,6 +68,15 @@ Element providing an easy component access to the uva library's catalog.
        * @default null
        */
       count: null,
+
+      /**
+       * The `more` attribute is set to true is there are more results to retrieve by incrementing the page count
+       *
+       * @attribute more
+       * @type boolean
+       * @default null
+       */
+      more: null,
 
       /**
        * The `facets` attribute is set with the facets in a catalog response
@@ -243,6 +261,24 @@ Element providing an easy component access to the uva library's catalog.
       facet_limits_json:null,
 
       /**
+       * The `facet_limits_inc` attribute limits the results to those matching the facets inclusivly (ex: {"library":"Alderman"} or {"library":["Alderman","Law Library"]})
+       *
+       * @attribute facet_limits_inc
+       * @type object
+       * @default null
+       */
+      facet_limits_inc:null,
+
+      /**
+       * The `facet_limits_inc_json` attribute is a mirror of (and bound to) the facet_limits_inc attribute.  The only difference is that this attribute is in json format (string)
+       *
+       * @attribute facet_limits_inc_json
+       * @type string
+       * @default null
+       */
+      facet_limits_inc_json:null,
+
+      /**
        * The `api` property is set to the Library's client catalog api once loaded
        *
        * @attribute api
@@ -253,19 +289,34 @@ Element providing an easy component access to the uva library's catalog.
 
       apiLoaded: function (e) {
         this.api = e.detail.catalog;
+        this.facet_limitsChanged();
+        this.facet_limits_incChanged();
         if (this.auto)
           this.fetch();
       },
 
       facet_limitsChanged: function() {
         var fl = JSON.stringify(this.facet_limits);
-        if (!fl === this.facet_limits_json)
+        if (fl != this.facet_limits_json)
           this.facet_limits_json = fl;
       },
 
+      facet_limits_incChanged: function() {
+        var fl = JSON.stringify(this.facet_limits_inc);
+        if (fl != this.facet_limits_inc_json)
+          this.facet_limits_inc_json = fl;
+      },
+
       facet_limits_jsonChanged: function() {
-        if (!JSON.stringify(this.facet_limits) === this.facet_limits_json) {
+        if (JSON.stringify(this.facet_limits) != this.facet_limits_json) {
           this.facet_limits = JSON.parse(this.facet_limits_json);
+        }
+        this.fetch();
+      },
+
+      facet_limits_inc_jsonChanged: function() {
+        if (JSON.stringify(this.facet_limits_inc) != this.facet_limits_inc_json) {
+          this.facet_limits_inc = JSON.parse(this.facet_limits_inc_json);
         }
         this.fetch();
       },
@@ -278,8 +329,12 @@ Element providing an easy component access to the uva library's catalog.
        * The `fetch` method will make a query request against the catalog.
        *
        * @method fetch
+       * @param {Boolean} append If true new items are appended to previously returned items.
        */
-      fetch: function () {
+      fetch: function (soft){
+
+        this.job('fetch', function(){
+
         if (this.api) {
 
           // Cancel all requests currently running
@@ -302,16 +357,19 @@ Element providing an easy component access to the uva library's catalog.
             publisher: this.publisher,
             year_published_start: this['year_published_start'],
             year_published_end: this['year_published_end'],
-            facets: this.facet_limits_json
+            facets: this.facet_limits_json,
+            facets_inclusive: this.facet_limits_inc_json
             };
 
           // Put a simple message into the requests queue for this request
-          var mess = {cancel:false};
+          var mess = {cancel:false, soft:soft};
           this.requests.push(mess);
 
-          this.api.search(req_pack).execute( this.parseResults.bind(this, mess) );
           console.log('fetching catalog results!');
+          return this.api.search(req_pack).execute( this.parseResults.bind(this, mess) );
         }
+
+        }, 750);
       },
 
       /**
@@ -322,9 +380,13 @@ Element providing an easy component access to the uva library's catalog.
        */
       parseResults: function(mess, results){
         if (!mess.cancel) {
-          this.count = results.count;
-          this.items = results.items;          
+          if (this.append && mess.soft)
+            this.items = (this.items == null)? results.items: this.items.concat(results.items);
+          else
+            this.items = results.items; 
+          this.count = results.count;          
           this.facets = results.facets;
+          this.more = results.count > this.page*this.per_page;
           this.fire('uvalib-catalog-fetched-results');
         } else {
           console.log('fetch canceled!');
