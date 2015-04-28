@@ -9,7 +9,8 @@
   "main": "uvalib-catalog.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^0.5.4",
-    "uvalib-api": "uvalib-components/uvalib-api"
+    "uvalib-api": "uvalib-components/uvalib-api",
+    "uvalib-helper-libs": "uvalib-components/uvalib-helper-libs"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^2.2.3"

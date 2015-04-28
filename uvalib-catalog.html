@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../uvalib-api/uvalib-api.html">
+<link rel="import" href="../uvalib-helper-libs/uvalib-helper-libs.html">
 
 <!--
 Element providing an easy component access to the uva library's catalog.
@@ -15,6 +16,7 @@ Element providing an easy component access to the uva library's catalog.
 -->
 <polymer-element name="uvalib-catalog" attributes="auto append count facets items availability directions page per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json facet_limits_inc facet_limits_inc_json more">
   <template>
+    <uvalib-helper-libs></uvalib-helper-libs>
     <uvalib-api on-uvalib-api-load="{{apiLoaded}}"></uvalib-api>
   </template>
   <script>
@@ -398,6 +400,31 @@ Element providing an easy component access to the uva library's catalog.
             this.requests.splice(i,1);
             break;
           }
+      },
+
+      // mark item available or not
+      // pull the available copy out
+      notAvailableLocations: ['CHECKEDOUT','INTERNET'],
+      parseAvailbility: function(library){
+          _.forEach(this.items, function(item){
+              // holding for this library
+              var holding = _.find(item.holdings, function(holding){
+                return holding.library_code===library.toUpperCase() && !holding.shadowed;
+              }, this)
+              var copy = _.find(holding.copies, function(copy){
+                return _.indexOf(this.notAvailableLocations, copy.current_location_code)===-1;
+              }, this)
+              if (copy) {
+                item.available = true;
+                item.copy = copy;
+                item.copy.call_number = holding.call_number;
+                item.copy.call_number_normalized = holding.call_number_normalized;
+              } else {
+                item.available = false;
+                // holdings for other libraries
+                
+              }
+          },this);
       }
       
     });
