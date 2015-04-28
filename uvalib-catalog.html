@@ -345,6 +345,7 @@ Element providing an easy component access to the uva library's catalog.
 
           var req_pack = {
             availability: this.availability,
+            directions: this.directions,
             page: this.page,
             per_page: this['per_page'],
             query: this.query,
@@ -422,7 +423,7 @@ Element providing an easy component access to the uva library's catalog.
               } else {
                 item.available = false;
                 // holdings for other libraries
-                
+
               }
           },this);
       }
