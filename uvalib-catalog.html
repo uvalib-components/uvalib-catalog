@@ -16,7 +16,6 @@ Element providing an easy component access to the uva library's catalog.
 -->
 <polymer-element name="uvalib-catalog" attributes="auto append count facets items availability directions page per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json facet_limits_inc facet_limits_inc_json more">
   <template>
-    <uvalib-helper-libs></uvalib-helper-libs>
     <uvalib-api on-uvalib-api-load="{{apiLoaded}}"></uvalib-api>
   </template>
   <script>
