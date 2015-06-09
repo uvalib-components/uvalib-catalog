@@ -1,346 +1,178 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../uvalib-api/uvalib-api.html">
 
 <!--
 Element providing an easy component access to the uva library's catalog.
 
-##### Example
+Example:
 
     <uvalib-catalog></uvalib-catalog>
 
+@group Library Elements
 @element uvalib-catalog
-@blurb Element providing an easy component access to the uva library's catalog.
-@status alpha
-@homepage http://uvalib-components.github.io/uvalib-catalog
+@demo demo/index.html
 -->
-<polymer-element name="uvalib-catalog" attributes="auto append count facets items availability directions page per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json facet_limits_inc facet_limits_inc_json more">
-  <template>
-    <uvalib-api on-uvalib-api-load="{{apiLoaded}}"></uvalib-api>
-  </template>
-  <script>
-    Polymer({
+<dom-module id="uvalib-catalog">
 
-      observe: {
-        auto: function(){this.fetch(false);},
-        availability: function(){this.fetch(false);},
-        directions: function(){this.fetch(false);},
-        page: function(){this.fetch(true);},
-        per_page: function(){this.fetch(false);},
-        query: function(){this.fetch(false);},
-        sort_order: function(){this.fetch(false);},
-        operator: function(){this.fetch(false);},
-        author: function(){this.fetch(false);},
-        title_query: function(){this.fetch(false);},
-        journal_title: function(){this.fetch(false);},
-        subject: function(){this.fetch(false);},
-        keywords: function(){this.fetch(false);},
-        call_number: function(){this.fetch(false);},
-        publisher: function(){this.fetch(false);},
-        year_published_start: function(){this.fetch(false);},
-        year_published_end: function(){this.fetch(false);}
+  <template>
+    <uvalib-api on-uvalib-api-load="apiLoaded"></uvalib-api>
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'uvalib-catalog',
+
+    properties: {
+
+      auto: {type:Boolean, default:false, observe:"fetch"},
+      append: {type:Boolean, default:false},
+      availability: {type:Boolean, default:false, observe:"fetch"},
+      directions: {type:Boolean, default:false, observe:"fetch"},
+      page: {type:Number, default:1, observe:"fetch"},
+      per_page: {type:Number, default:10, observe:"fetch"},
+      query: {type:String, default:"", observe:"fetch"},
+      sort_order: {type:String, default:"relevancy", observe:"fetch"},
+      operator: {type:String, default:"AND", observe:"fetch"},
+      author: {type:String, default:"", observe:"fetch"},
+      title_query: {type:String, default:"", observe:"fetch"},
+      journal_title: {type:String, default:"", observe:"fetch"},
+      subject: {type:String, default:"", observe:"fetch"},
+      keywords: {type:String, default:"", observe:"fetch"},
+      call_number: {type:String, default:"", observe:"fetch"},
+      publisher: {type:String, default:"", observe:"fetch"},
+      year_published_start: {type:String, default:"", observe:"fetch"},
+      year_published_end: {type:String, default:"", observe:"fetch"},
+      count: {type:Number, default:null},
+      more: {type:Boolean, default:null},
+      facets: {type:Object, default:null},
+      items: {type:Array, default:null},
+      facet_limits: {type:Object, default:null, observe:"facet_limitsChanged"},
+      facet_limits_json: {type:String, default:null, observe:"facet_limits_jsonChanged"},
+      facet_limits_inc: {type:Object, default:null, observe:"facet_limits_incChanged"},
+      facet_limits_inc_json: {type:String, default:null, observe:"facet_limits_inc_jsonChanged"},
+      api: {type:Object, default:null},
+
+
+//      facets items per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json facet_limits_inc facet_limits_inc_json more
+
+      /**
+       * `fancy` indicates that the element should don a monocle and tophat,
+       * while checking its pocket watch.
+       */
+      fancy: Boolean,
+
+      /**
+       * Describes the author of the element, but is really just an excuse to
+       * show off JSDoc annotations.
+       *
+       * @type {{name: string, image: string}}
+       */
+      author: {
+        type: Object,
+        // Use `value` to provides a default value for a property, by setting it
+        // on your element's prototype.
+        //
+        // If you provide a function, as we do here, Polymer will call that
+        // _per element instance_.
+        //
+        // We do that to ensure that each element gets its own copy of the
+        // value, rather than having it shared across all instances (via the
+        // prototype).
+        value: function() {
+          return {
+            name:  'Dimitri Glazkov',
+            image: 'http://addyosmani.com/blog/wp-content/uploads/2013/04/unicorn.jpg',
+          };
+        }
       },
 
-      /**
-       * The `auto` attribute set to true means that the catalog will be queried 
-       * whenever a request attribute is changed.
-       *
-       * @attribute auto
-       * @type bool
-       * @default false
-       */
-      auto: false,
+    },
 
-      /**
-       * The `append` attribute set to true means that the items returned from a search will append the current list of items
-       *
-       * @attribute append
-       * @type bool
-       * @default false
-       */
-      append: false,
+    // Element Lifecycle
 
-      /**
-       * The `count` attribute is set to the total query result count from the 
-       * catalog once a request has been fetched
-       *
-       * @attribute count
-       * @type string
-       * @default null
-       */
-      count: null,
+    ready: function() {
+      // `ready` is called after all elements have been configured, but
+      // propagates bottom-up. This element's children are ready, but parents
+      // are not.
+      //
+      // This is the point where you should make modifications to the DOM (when
+      // necessary), or kick off any processes the element wants to perform.
+    },
 
-      /**
-       * The `more` attribute is set to true is there are more results to retrieve by incrementing the page count
-       *
-       * @attribute more
-       * @type boolean
-       * @default null
-       */
-      more: null,
+    attached: function() {
+      // `attached` fires once the element and its parents have been inserted
+      // into a document.
+      //
+      // This is a good place to perform any work related to your element's
+      // visual state or active behavior (measuring sizes, beginning animations,
+      // loading resources, etc).
+    },
 
-      /**
-       * The `facets` attribute is set with the facets in a catalog response
-       *
-       * @attribute facets
-       * @type object
-       * @default null
-       */
-      facets: null,
+    detached: function() {
+      // The analog to `attached`, `detached` fires when the element has been
+      // removed from a document.
+      //
+      // Use this to clean up anything you did in `attached`.
+    },
 
-      /**
-       * The `items` attribute is set with the results for a catalog request
-       *
-       * @attribute items
-       * @type array
-       * @default null
-       */
-      items: null,
-
-      /**
-       * The `availability` attribute specifies wheather the results should include availability info (at the cost of a slower response)
-       *
-       * @attribute availability
-       * @type boolean
-       * @default false
-       */ 
-      availability: false, 
-
-      /**
-       * The `directions` attribute specifies wheather the results should include directions info
-       *
-       * @attribute directions
-       * @type boolean
-       * @default false
-       */ 
-      directions: false, 
-
-
-      /**
-       * The `page` attribute specifies the page of results to return from the catalog search
-       *
-       * @attribute page
-       * @type integer
-       * @default 1
-       */ 
-      page: 1, 
-
-      /**
-       * The `per_page` attribute limits the number of results returned in the catalog search result
-       *
-       * @attribute per_page
-       * @type integer
-       * @default 10
-       */      
-      per_page: 10,
-
-      /**
-       * The `query` attribute sets the general query of the catalog search request
-       *
-       * @attribute query
-       * @type string
-       * @default ""
-       */
-      query: "",
-
-      /**
-       * The `sort_order` attribute sets the sort order of the catalog search results.
-       * Values can be one of "author", "published", "published_a", "received", "relevancy", or "title"
-       *
-       * @attribute sort_order
-       * @type string
-       * @default "relevancy"
-       */
-      sort_order: "relevancy",
-
-      /**
-       * The `operator` attribute sets the operator used for the advanced fields.  Options are 'AND' and 'OR'.
-       *
-       * @attribute query
-       * @type string
-       * @default "AND"
-       */
-      operator:'AND',
-
-      /**
-       * The `author` attribute sets the advanced query for author
-       *
-       * @attribute author
-       * @type string
-       * @default ""
-       */
-      author:'',
-
-      /**
-       * The `title` attribute sets the advanced query for title
-       *
-       * @attribute title
-       * @type string
-       * @default ""
-       */
-      title_query:'',
-
-      /**
-       * The `journal_title` attribute sets the advanced query for journal_title
-       *
-       * @attribute journal_title
-       * @type string
-       * @default ""
-       */
-      journal_title:'',
-
-      /**
-       * The `subject` attribute sets the advanced query for subject
-       *
-       * @attribute subject
-       * @type string
-       * @default ""
-       */
-      subject:'',
-
-      /**
-       * The `keywords` attribute sets the advanced query for keywords
-       *
-       * @attribute keywords
-       * @type string
-       * @default ""
-       */
-      keywords:'',
-
-      /**
-       * The `call_number` attribute sets the advanced query for call_number
-       *
-       * @attribute call_number
-       * @type string
-       * @default ""
-       */
-      call_number:'',
-
-      /**
-       * The `publisher` attribute sets the advanced query for publisher
-       *
-       * @attribute publisher
-       * @type string
-       * @default ""
-       */
-      publisher:'',
-
-      /**
-       * The `year_published_start` attribute sets the advanced query for year_published_start
-       *
-       * @attribute year_published_start
-       * @type string
-       * @default ""
-       */
-      year_published_start:'',
-
-      /**
-       * The `year_published_end` attribute sets the advanced query for year_published_end
-       *
-       * @attribute year_published_end
-       * @type string
-       * @default ""
-       */
-      year_published_end:'',
-
-      /**
-       * The `facet_limits` attribute limits the results to those matching the facets (ex: {"library":"Alderman"} or {"library":["Alderman","Law Library"]})
-       *
-       * @attribute facet_limits
-       * @type object
-       * @default null
-       */
-      facet_limits:null,
-
-      /**
-       * The `facet_limits_json` attribute is a mirror of (and bound to) the facet_limits attribute.  The only difference is that this attribute is in json format (string)
-       *
-       * @attribute facet_limits_json
-       * @type string
-       * @default null
-       */
-      facet_limits_json:null,
-
-      /**
-       * The `facet_limits_inc` attribute limits the results to those matching the facets inclusivly (ex: {"library":"Alderman"} or {"library":["Alderman","Law Library"]})
-       *
-       * @attribute facet_limits_inc
-       * @type object
-       * @default null
-       */
-      facet_limits_inc:null,
-
-      /**
-       * The `facet_limits_inc_json` attribute is a mirror of (and bound to) the facet_limits_inc attribute.  The only difference is that this attribute is in json format (string)
-       *
-       * @attribute facet_limits_inc_json
-       * @type string
-       * @default null
-       */
-      facet_limits_inc_json:null,
-
-      /**
-       * The `api` property is set to the Library's client catalog api once loaded
-       *
-       * @attribute api
-       * @type object
-       * @default null
-       */
-      api: null,
-
-      apiLoaded: function (e) {
+    apiLoaded: function (e) {
         this.api = e.detail.catalog;
         this.facet_limitsChanged();
         this.facet_limits_incChanged();
         if (this.auto)
           this.fetch();
-      },
+    },
 
-      facet_limitsChanged: function() {
+    facet_limitsChanged: function() {
         var fl = JSON.stringify(this.facet_limits);
         if (fl != this.facet_limits_json)
           this.facet_limits_json = fl;
-      },
-
-      facet_limits_incChanged: function() {
+    },
+    facet_limits_incChanged: function() {
         var fl = JSON.stringify(this.facet_limits_inc);
         if (fl != this.facet_limits_inc_json)
           this.facet_limits_inc_json = fl;
-      },
-
-      facet_limits_jsonChanged: function() {
+    },
+    facet_limits_jsonChanged: function() {
         if (JSON.stringify(this.facet_limits) != this.facet_limits_json) {
           this.facet_limits = JSON.parse(this.facet_limits_json);
         }
         this.fetch();
-      },
-
-      facet_limits_inc_jsonChanged: function() {
+    },
+    facet_limits_inc_jsonChanged: function() {
         if (JSON.stringify(this.facet_limits_inc) != this.facet_limits_inc_json) {
           this.facet_limits_inc = JSON.parse(this.facet_limits_inc_json);
         }
         this.fetch();
-      },
-
-      // Keep track of requests so that older ones can be ignored
-      // ToDo: see if we can cancel api requests before they return
-      requests:[],
-
-      /**
-       * The `fetch` method will make a query request against the catalog.
-       *
-       * @method fetch
-       * @param {Boolean} append If true new items are appended to previously returned items.
-       */
-      fetch: function (soft){
-
-        this.job('fetch', function(){
-
+    },
+    // Keep track of requests so that older ones can be ignored
+    // ToDo: see if we can cancel api requests before they return
+    requests:[],
+    /**
+      * The `fetch` method will make a query request against the catalog.
+      *
+      * @method fetch
+      * @param {Boolean} append If true new items are appended to previously returned items.
+      */
+    fetch: function (soft){
+        this.debounce('fetch', function(){
         if (this.api) {
-
           // Cancel all requests currently running
           for (var i=0; i<this.requests.length; i++)
             this.requests[i].cancel=true;
-
           var req_pack = {
             availability: this.availability,
             directions: this.directions,
@@ -361,18 +193,14 @@ Element providing an easy component access to the uva library's catalog.
             facets: this.facet_limits_json,
             facets_inclusive: this.facet_limits_inc_json
             };
-
           // Put a simple message into the requests queue for this request
           var mess = {cancel:false, soft:soft};
           this.requests.push(mess);
-
           console.log('fetching catalog results!');
           return this.api.search(req_pack).execute( this.parseResults.bind(this, mess) );
         }
-
         }, 750);
       },
-
       /**
        * The `uvalib-catalog-fetched-results` event is fired whenever we
        * call fetch and process the results.
@@ -392,7 +220,6 @@ Element providing an easy component access to the uva library's catalog.
         } else {
           console.log('fetch canceled!');
         }
-
         // remove this requests message from the queue
         for (var i=0; i<this.requests.length; i++)
           if (mess == this.requests[i]) {
@@ -400,7 +227,6 @@ Element providing an easy component access to the uva library's catalog.
             break;
           }
       },
-
       // mark item available or not
       // pull the available copy out
       notAvailableLocations: ['CHECKEDOUT','INTERNET'],
@@ -421,11 +247,10 @@ Element providing an easy component access to the uva library's catalog.
               } else {
                 item.available = false;
                 // holdings for other libraries
-
               }
           },this);
       }
-      
-    });
-  </script>
-</polymer-element>
+
+  });
+
+</script>

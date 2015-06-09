@@ -1,17 +1,29 @@
 {
   "name": "uvalib-catalog",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "authors": [
+    "Doug Chestnut <dougchestnut@gmail.com>"
+  ],
+  "description": "An element providing an interface to the UVa Library catalog api endpoint.",
   "keywords": [
-    "seed",
+    "web-component",
     "polymer",
-    "web-components"
+    "seed"
   ],
   "main": "uvalib-catalog.html",
+  "license": "MIT",
+  "homepage": "https://github.com/uvalib-components/uvalib-catalog/",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
   "dependencies": {
-    "polymer": "Polymer/polymer",
+    "polymer": "Polymer/polymer#^1.0.0",
     "uvalib-api": "uvalib-components/uvalib-api"
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester"
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*"
   }
 }

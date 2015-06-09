@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>uvalib-catalog Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../uvalib-catalog.html">
+  </head>
+  <body unresolved class="fullbleed layout vertical">
+    <template is="dom-bind" id="app">    
+      <p>An `uvalib-catalog` looks like this:</p>
+
+      <uvalib-catalog auto items="{{items}}" facets="{{facets}}" count="{{count}}" query="{{query}}" per_page="20" sort_order="{{sort}}" facet_limits_json="{{json_facets}}"></uvalib-catalog>
+
+      <label for="query">Search Query</label><input id="query" value="{{query}}"><br />
+      <label for="facets">Facets (Json)</label><input id="facets" value="{{json_facets}}"><br />
+      <label for="sort">Sort Order</label>
+      <select id="sort" value="{{sort}}">
+        <option>author</option>
+        <option>published</option>
+        <option>published_a</option>
+        <option>received</option>
+        <option selected>relevancy</option>
+        <option>title</option>
+      </select>
+      <h2>results:</h2>
+      <ul>
+        <template is="dom-repeat" items="{{items}}"><li>Title: {{item.title}}</li></template>
+      </ul>    
+    </template>
+  </body>
+</html>
