@@ -59,13 +59,13 @@ Example:
       year_published_end: {type:String, default:"", observe:"fetch"},
       count: {type:Number, default:null},
       more: {type:Boolean, default:null},
-      facets: {type:Object, default:null},
-      items: {type:Array, default:null},
-      facet_limits: {type:Object, default:null, observe:"facet_limitsChanged"},
-      facet_limits_json: {type:String, default:null, observe:"facet_limits_jsonChanged"},
-      facet_limits_inc: {type:Object, default:null, observe:"facet_limits_incChanged"},
-      facet_limits_inc_json: {type:String, default:null, observe:"facet_limits_inc_jsonChanged"},
-      api: {type:Object, default:null},
+      facets: {type:Object, default:null, notify:true},
+      items: {type:Array, default:null, notify:true},
+      facet_limits: {type:Object, default:null, observe:"facet_limitsChanged", notify:true},
+      facet_limits_json: {type:String, default:null, observe:"facet_limits_jsonChanged", notify:true},
+      facet_limits_inc: {type:Object, default:null, observe:"facet_limits_incChanged", notify:true},
+      facet_limits_inc_json: {type:String, default:null, observe:"facet_limits_inc_jsonChanged", notify:true},
+      api: {type:Object, default:null, notify:true},
 
 
 //      facets items per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json facet_limits_inc facet_limits_inc_json more
