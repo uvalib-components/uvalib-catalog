@@ -20,7 +20,8 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.0.0",
-    "uvalib-api": "uvalib-components/uvalib-api"
+    "uvalib-api": "uvalib-components/uvalib-api",
+    "uvalib-helper-libs": "uvalib-components/uvalib-helper-libs"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
