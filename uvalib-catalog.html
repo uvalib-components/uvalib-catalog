@@ -57,7 +57,7 @@ Example:
       publisher: {type:String, default:"", observe:"fetch"},
       yearPublishedStart: {type:String, default:"", observe:"fetch"},
       yearPublishedEnd: {type:String, default:"", observe:"fetch"},
-      count: {type:Number, default:null},
+      count: {type:Number, default:null, notify:true},
       more: {type:Boolean, default:null},
       facets: {type:Object, default:null, notify:true},
       items: {type:Array, default:null, notify:true},
