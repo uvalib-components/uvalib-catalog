@@ -166,8 +166,8 @@ Example:
             publisher: this.publisher,
             year_published_start: this['year_published_start'],
             year_published_end: this['year_published_end'],
-            facets: JSON.stringify(this.facet_limits),
-            facets_inclusive: JSON.stringify(this.facet_limits_inc)
+            facets: JSON.stringify(this.facetLimits),
+            facets_inclusive: JSON.stringify(this.facetLimitsInc)
             };
           // Put a simple message into the requests queue for this request
           var mess = {cancel:false, soft:soft};
