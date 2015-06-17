@@ -138,23 +138,23 @@ Example:
           this.fetch();
     },
 
-    facet_limitsChanged: function() {
+    facet_limitsChanged: function(newValue, oldValue) {
         var fl = JSON.stringify(this.facet_limits);
         if (fl != this.facet_limits_json)
           this.facet_limits_json = fl;
     },
-    facet_limits_incChanged: function() {
+    facet_limits_incChanged: function(newValue, oldValue) {
         var fl = JSON.stringify(this.facet_limits_inc);
         if (fl != this.facet_limits_inc_json)
           this.facet_limits_inc_json = fl;
     },
-    facet_limits_jsonChanged: function() {
+    facet_limits_jsonChanged: function(newValue, oldValue) {
         if (JSON.stringify(this.facet_limits) != this.facet_limits_json) {
           this.facet_limits = JSON.parse(this.facet_limits_json);
         }
         this.fetch();
     },
-    facet_limits_inc_jsonChanged: function() {
+    facet_limits_inc_jsonChanged: function(newValue, oldValue) {
         if (JSON.stringify(this.facet_limits_inc) != this.facet_limits_inc_json) {
           this.facet_limits_inc = JSON.parse(this.facet_limits_inc_json);
         }
