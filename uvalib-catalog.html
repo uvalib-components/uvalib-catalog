@@ -62,6 +62,7 @@ Example:
       facets: {type:Object, default:null, notify:true},
       items: {type:Array, default:null, notify:true},
       facetLimits: {type:Object, default:null},
+      facetLimitsInc: {type:Object, default:null},
       api: {type:Object, default:null, notify:true},
 
 
@@ -165,8 +166,8 @@ Example:
             publisher: this.publisher,
             year_published_start: this['year_published_start'],
             year_published_end: this['year_published_end'],
-            facets: this.facet_limits_json,
-            facets_inclusive: this.facet_limits_inc_json
+            facets: JSON.stringify(this.facet_limits),
+            facets_inclusive: JSON.stringify(this.facet_limits_inc)
             };
           // Put a simple message into the requests queue for this request
           var mess = {cancel:false, soft:soft};
