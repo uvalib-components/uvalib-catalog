@@ -61,10 +61,7 @@ Example:
       more: {type:Boolean, default:null},
       facets: {type:Object, default:null, notify:true},
       items: {type:Array, default:null, notify:true},
-      facetLimits: {type:Object, default:null, observe:"facet_limitsChanged", notify:true},
-      facetLimitsJson: {type:String, default:null, observe:"facet_limits_jsonChanged", notify:true},
-      facetLimitsInc: {type:Object, default:null, observe:"facet_limits_incChanged", notify:true},
-      facetLimitsIncJson: {type:String, default:null, observe:"facet_limits_inc_jsonChanged", notify:true},
+      facetLimits: {type:Object, default:null},
       api: {type:Object, default:null, notify:true},
 
 
@@ -132,34 +129,10 @@ Example:
 
     apiLoaded: function (e) {
         this.api = e.detail.catalog;
-        this.facet_limitsChanged();
-        this.facet_limits_incChanged();
         if (this.auto)
           this.fetch();
     },
 
-    facet_limitsChanged: function(newValue, oldValue) {
-        var fl = JSON.stringify(this.facet_limits);
-        if (fl != this.facet_limits_json)
-          this.facet_limits_json = fl;
-    },
-    facet_limits_incChanged: function(newValue, oldValue) {
-        var fl = JSON.stringify(this.facet_limits_inc);
-        if (fl != this.facet_limits_inc_json)
-          this.facet_limits_inc_json = fl;
-    },
-    facet_limits_jsonChanged: function(newValue, oldValue) {
-        if (JSON.stringify(this.facet_limits) != this.facet_limits_json) {
-          this.facet_limits = JSON.parse(this.facet_limits_json);
-        }
-        this.fetch();
-    },
-    facet_limits_inc_jsonChanged: function(newValue, oldValue) {
-        if (JSON.stringify(this.facet_limits_inc) != this.facet_limits_inc_json) {
-          this.facet_limits_inc = JSON.parse(this.facet_limits_inc_json);
-        }
-        this.fetch();
-    },
     // Keep track of requests so that older ones can be ignored
     // ToDo: see if we can cancel api requests before they return
     requests:[],
