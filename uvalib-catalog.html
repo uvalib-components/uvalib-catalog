@@ -113,36 +113,37 @@ Example:
       */
     fetch: function (soft){
         this.debounce('fetch', function(){
-        if (this.api) {
-          // Cancel all requests currently running
-          for (var i=0; i<this.requests.length; i++)
-            this.requests[i].cancel=true;
-          var req_pack = {
-            availability: this.availability,
-            directions: this.directions,
-            page: this.page,
-            per_page: this['per_page'],
-            query: this.query,
-            sort_order: this['sort_order'],
-            operator: this.operator,
-            author: this.author,
-            title: this['title_query'],
-            journal_title: this['journal_title'],
-            subject: this.subject,
-            keywords: this.keywords,
-            call_number: this['call_number'],
-            publisher: this.publisher,
-            year_published_start: this['year_published_start'],
-            year_published_end: this['year_published_end'],
-            facets: JSON.stringify(this.facetLimits),
-            facets_inclusive: JSON.stringify(this.facetLimitsInc)
-            };
-          // Put a simple message into the requests queue for this request
-          var mess = {cancel:false, soft:soft};
-          this.requests.push(mess);
-          console.log('fetching catalog results!');
-          return this.api.search(req_pack).execute( this.parseResults.bind(this, mess) );
-        }
+            if (this.api) {
+                this.fire('uvalib-catalog-started-fetch');
+                // Cancel all requests currently running
+                for (var i=0; i<this.requests.length; i++)
+                    this.requests[i].cancel=true;
+                var req_pack = {
+                    availability: this.availability,
+                    directions: this.directions,
+                    page: this.page,
+                    per_page: this['per_page'],
+                    query: this.query,
+                    sort_order: this['sort_order'],
+                    operator: this.operator,
+                    author: this.author,
+                    title: this['title_query'],
+                    journal_title: this['journal_title'],
+                    subject: this.subject,
+                    keywords: this.keywords,
+                    call_number: this['call_number'],
+                    publisher: this.publisher,
+                    year_published_start: this['year_published_start'],
+                    year_published_end: this['year_published_end'],
+                    facets: JSON.stringify(this.facetLimits),
+                    facets_inclusive: JSON.stringify(this.facetLimitsInc)
+                };
+                // Put a simple message into the requests queue for this request
+                var mess = {cancel:false, soft:soft};
+                this.requests.push(mess);
+                console.log('fetching catalog results!');
+                return this.api.search(req_pack).execute( this.parseResults.bind(this, mess) );
+            }
         }, 750);
       },
       /**
@@ -164,6 +165,8 @@ Example:
         } else {
           console.log('fetch canceled!');
         }
+        this.fire('uvalib-catalog-finished-fetch');
+        
         // remove this requests message from the queue
         for (var i=0; i<this.requests.length; i++)
           if (mess == this.requests[i]) {
