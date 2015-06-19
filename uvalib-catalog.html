@@ -61,8 +61,8 @@ Example:
       more: {type:Boolean, value:null},
       facets: {type:Object, value:null, notify:true},
       items: {type:Array, value:null, notify:true},
-      facetLimits: {type:Object, value:{}},
-      facetLimitsInc: {type:Object, value:{}},
+      facetLimits: {type:Object, value:function() { return {}; },
+      facetLimitsInc: {type:Object, value:function() { return {}; },
       api: {type:Object, notify:true},
 
 
