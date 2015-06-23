@@ -64,6 +64,7 @@ Example:
       facetLimits: {type:Object, value:function() { return {}; }},
       facetLimitsInc: {type:Object, value:function() { return {}; }},
       api: {type:Object, notify:true},
+      searchTimeout: {type:Number, value:750},
 
 
 //      facets items per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json facet_limits_inc facet_limits_inc_json more
@@ -144,7 +145,7 @@ Example:
                 console.log('fetching catalog results!');
                 return this.api.search(req_pack).execute( this.parseResults.bind(this, mess) );
             }
-        }, 750);
+        }, this.searchTimeout);
       },
       /**
        * The `uvalib-catalog-fetched-results` event is fired whenever we
