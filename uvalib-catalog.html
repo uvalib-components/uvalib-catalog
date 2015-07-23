@@ -113,7 +113,6 @@ Example:
       * @param {Boolean} append If true new items are appended to previously returned items.
       */
     fetch: function (soft){
-        this.debounce('fetch', function(){
             if (this.api) {
                 this.fire('uvalib-catalog-started-fetch');
                 // Cancel all requests currently running
@@ -145,7 +144,6 @@ Example:
                 console.log('fetching catalog results!');
                 return this.api.search(req_pack).execute( this.parseResults.bind(this, mess) );
             }
-        }, this.searchTimeout);
       },
       /**
        * The `uvalib-catalog-fetched-results` event is fired whenever we
