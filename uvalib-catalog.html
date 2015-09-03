@@ -161,10 +161,10 @@ Example:
           this.facets = results.facets;
           this.more = results.count > this.page*this.per_page;
           this.fire('uvalib-catalog-fetched-results');
+          this.fire('uvalib-catalog-finished-fetch');
         } else {
           console.log('fetch canceled!');
         }
-        this.fire('uvalib-catalog-finished-fetch');
         
         // remove this requests message from the queue
         for (var i=0; i<this.requests.length; i++)
