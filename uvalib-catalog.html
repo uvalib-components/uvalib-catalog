@@ -175,7 +175,7 @@ Example:
       },
       // mark item available or not
       // pull the available copy out
-      notAvailableLocations: ['CHECKEDOUT','INTERNET'],
+      notAvailableLocations: ['CHECKEDOUT','INTERNET','ON-ORDER'],
       parseAvailbility: function(library){
           _.forEach(this.items, function(item){
               // holding for this library
@@ -192,6 +192,7 @@ Example:
                 item.copy.call_number_normalized = holding.call_number_normalized;
               } else {
                 item.available = false;
+                item.availableMessage = holding.copies[0].current_location;
                 // holdings for other libraries
               }
           },this);
