@@ -228,7 +228,7 @@ Example:
                                      item.author_display.join(', '):"",
                      format: (item.format_facet && item.format_facet.length>0)?
                                      item.format_facet.join(', '):"",
-                     image: "http://search.lib.virginia.edu/catalog/"+obj.id+"/image.jpg"
+                     image: "http://search.lib.virginia.edu/catalog/"+item.id+"/image.jpg"
                     };
           if (item.subtitle_display && item.subtitle_display.length>0)
             obj.title += item.subtitle_display.join(', ');
