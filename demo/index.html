@@ -13,31 +13,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>uvalib-catalog Demo</title>
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../../polymer/polymer.html">
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="../uvalib-catalog.html">
   </head>
-  <body unresolved class="fullbleed layout vertical">
-    <template is="dom-bind" id="app">    
-      <p>An `uvalib-catalog` looks like this:</p>
+  <body unresolved>
 
-      <uvalib-catalog auto items="{{items}}" facets="{{facets}}" count="{{count}}" query="{{query}}" per_page="20" sort_order="{{sort}}" facet_limits_json="{{json_facets}}"></uvalib-catalog>
+    <p>An example of <code>&lt;uvalib-catalog&gt;</code>:</p>
 
-      <label for="query">Search Query</label><input id="query" value="{{query}}"><br />
-      <label for="facets">Facets (Json)</label><input id="facets" value="{{json_facets}}"><br />
-      <label for="sort">Sort Order</label>
-      <select id="sort" value="{{sort}}">
-        <option>author</option>
-        <option>published</option>
-        <option>published_a</option>
-        <option>received</option>
-        <option selected>relevancy</option>
-        <option>title</option>
-      </select>
-      <h2>results:</h2>
-      <ul>
-        <template is="dom-repeat" items="{{items}}"><li>Title: {{item.title}}</li></template>
-      </ul>    
-    </template>
+    <p>Make words! <button id="saybtn">Say Something</button></p>
+    <p>Make lasers! <button id="laserbtn">Fire lasers</button></p>
+
+    <uvalib-catalog author='{"name": "Lord Meowser", "image": "http://lorempixel.com/g/300/200/cats/"}' fancy>
+      <h2>Hello uvalib-catalog</h2>
+    </uvalib-catalog>
+
+    <script>
+      var seedElement = document.querySelector('uvalib-catalog');
+
+      document.querySelector('#saybtn').addEventListener('click', function() {
+        alert(seedElement.sayHello('Hallo!'));
+      });
+
+      document.querySelector('#laserbtn').addEventListener('click', function() {
+        seedElement.fireLasers();
+      });
+
+      document.addEventListener("uvalib-catalog-lasers", function(e) {
+        console.log(e.detail.sound);
+      });
+
+    </script>
+
   </body>
 </html>

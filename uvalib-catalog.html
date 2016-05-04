@@ -7,196 +7,145 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
+
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../uvalib-helper-libs/lodash.html">
-<link rel="import" href="../uvalib-api/uvalib-api.html">
 
 <!--
-Element providing an easy component access to the uva library's catalog.
+An element providing a solution to no problem in particular.
 
 Example:
 
     <uvalib-catalog></uvalib-catalog>
 
-@group Library Elements
-@element uvalib-catalog
+Example:
+
+    <uvalib-catalog>
+      <h2>Hello uvalib-catalog</h2>
+    </uvalib-catalog>
+
 @demo demo/index.html
+@hero hero.svg
 -->
+
 <dom-module id="uvalib-catalog">
-
   <template>
-    <uvalib-api on-uvalib-api-load="apiLoaded"></uvalib-api>
-  </template>
-
-</dom-module>
-
-<script>
-
-  Polymer({
-
-    is: 'uvalib-catalog',
-
-    properties: {
-
-      auto: {type:Boolean, value:false, observer:"fetch"},
-      append: {type:Boolean, value:false},
-      availability: {type:Boolean, value:false, observer:"fetch"},
-      directions: {type:Boolean, value:false, observer:"fetch"},
-      page: {type:Number, value:1, observer:"fetch"},
-      perPage: {type:Number, value:10, observer:"fetch"},
-      query: {type:String, value:"", observer:"fetch"},
-      sortOrder: {type:String, value:"relevancy", observer:"fetch"},
-      operator: {type:String, value:"AND", observer:"fetch"},
-      author: {type:String, value:"", observer:"fetch"},
-      titleQuery: {type:String, value:"", observer:"fetch"},
-      journalTitle: {type:String, value:"", observer:"fetch"},
-      subject: {type:String, value:"", observer:"fetch"},
-      keywords: {type:String, value:"", observer:"fetch"},
-      callNumber: {type:String, value:"", observer:"fetch"},
-      publisher: {type:String, value:"", observer:"fetch"},
-      yearPublishedStart: {type:String, value:"", observer:"fetch"},
-      yearPublishedEnd: {type:String, value:"", observer:"fetch"},
-      count: {type:Number, value:null, notify:true},
-      more: {type:Boolean, value:null},
-      facets: {type:Object, value:null, notify:true},
-      items: {type:Array, value:null, notify:true},
-      facetLimits: {type:Object, value:function() { return {}; }},
-      facetLimitsInc: {type:Object, value:function() { return {}; }},
-      api: {type:Object, notify:true},
-      searchTimeout: {type:Number, value:750},
-
-
-//      facets items per_page query sort_order operator author title_query journal_title subject keywords call_number publisher year_published_start year_published_end facet_limits facet_limits_json facet_limits_inc facet_limits_inc_json more
-    },
-
-    // Element Lifecycle
-
-    ready: function() {
-      // `ready` is called after all elements have been configured, but
-      // propagates bottom-up. This element's children are ready, but parents
-      // are not.
-      //
-      // This is the point where you should make modifications to the DOM (when
-      // necessary), or kick off any processes the element wants to perform.
-    },
-
-    attached: function() {
-      // `attached` fires once the element and its parents have been inserted
-      // into a document.
-      //
-      // This is a good place to perform any work related to your element's
-      // visual state or active behavior (measuring sizes, beginning animations,
-      // loading resources, etc).
-    },
-
-    detached: function() {
-      // The analog to `attached`, `detached` fires when the element has been
-      // removed from a document.
-      //
-      // Use this to clean up anything you did in `attached`.
-    },
-
-    apiLoaded: function (e) {
-        this.api = e.detail.catalog;
-        if (this.auto)
-          this.fetch();
-    },
-
-    // Keep track of requests so that older ones can be ignored
-    // ToDo: see if we can cancel api requests before they return
-    requests:[],
-    /**
-      * The `fetch` method will make a query request against the catalog.
-      *
-      * @method fetch
-      * @param {Boolean} append If true new items are appended to previously returned items.
-      */
-    fetch: function (soft){
-            if (this.api) {
-                this.fire('uvalib-catalog-started-fetch');
-                // Cancel all requests currently running
-                for (var i=0; i<this.requests.length; i++)
-                    this.requests[i].cancel=true;
-                var req_pack = {
-                    availability: this.availability,
-                    directions: this.directions,
-                    page: this.page,
-                    per_page: this.perPage,
-                    query: this.query,
-                    sort_order: this.sortOrder,
-                    operator: this.operator,
-                    author: this.author,
-                    title: this.titleQuery,
-                    journal_title: this.journalTitle,
-                    subject: this.subject,
-                    keywords: this.keywords,
-                    call_number: this.callNumber,
-                    publisher: this.publisher,
-                    year_published_start: this.yearPublishedStart,
-                    year_published_end: this.yearPublishedEnd,
-                    facets: JSON.stringify(this.facetLimits),
-                    facets_inclusive: JSON.stringify(this.facetLimitsInc)
-                };
-                // Put a simple message into the requests queue for this request
-                var mess = {cancel:false, soft:soft};
-                this.requests.push(mess);
-                console.log('fetching catalog results!');
-                return this.api.search(req_pack).execute( this.parseResults.bind(this, mess) );
-            }
-      },
-      /**
-       * The `uvalib-catalog-fetched-results` event is fired whenever we
-       * call fetch and process the results.
-       *
-       * @event uvalib-catalog-fetched-results
-       */
-      parseResults: function(mess, results){
-        if (!mess.cancel) {
-          if (this.append && mess.soft)
-            this.items = (this.items == null)? results.items: this.items.concat(results.items);
-          else
-            this.items = results.items; 
-          this.count = results.count;          
-          this.facets = results.facets;
-          this.more = results.count > this.page*this.per_page;
-          this.fire('uvalib-catalog-fetched-results');
-          this.fire('uvalib-catalog-finished-fetch');
-        } else {
-          console.log('fetch canceled!');
-        }
-        
-        // remove this requests message from the queue
-        for (var i=0; i<this.requests.length; i++)
-          if (mess == this.requests[i]) {
-            this.requests.splice(i,1);
-            break;
-          }
-      },
-      // mark item available or not
-      // pull the available copy out
-      notAvailableLocations: ['CHECKEDOUT','INTERNET','ON-ORDER'],
-      parseAvailbility: function(library){
-          _.forEach(this.items, function(item){
-              // holding for this library
-              var holding = _.find(item.holdings, function(holding){
-                return holding.library_code===library.toUpperCase() && !holding.shadowed;
-              }, this)
-              var copy = _.find(holding.copies, function(copy){
-                return _.indexOf(this.notAvailableLocations, copy.current_location_code)===-1;
-              }, this)
-              if (copy) {
-                item.available = true;
-                item.copy = copy;
-                item.copy.call_number = holding.call_number;
-                item.copy.call_number_normalized = holding.call_number_normalized;
-              } else {
-                item.available = false;
-                item.availableMessage = holding.copies[0].current_location;
-                // holdings for other libraries
-              }
-          },this);
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
       }
 
-  });
+      .author img {
+        display: block;
+        float: left;
+        margin-right: 5px;
+        max-height: 100px;
+        max-width: 100px;
+      }
+    </style>
 
-</script>
+    <h1>&lt;uvalib-catalog&gt;</h1>
+    <content></content>
+    <p class="author">
+      <img src$="{{author.image}}">
+      Cheers,<br/>
+      <span class="name">{{author.name}}</span>
+    </p>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'uvalib-catalog',
+
+      properties: {
+        /**
+         * `fancy` indicates that the element should don a monocle and tophat,
+         * while checking its pocket watch.
+         */
+        fancy: Boolean,
+
+        /**
+         * Describes the author of the element, but is really just an excuse to
+         * show off JSDoc annotations.
+         *
+         * @type {{name: string, image: string}}
+         */
+        author: {
+          type: Object,
+          // Use `value` to provide a default value for a property, by setting it
+          // on your element's prototype.
+          //
+          // If you provide a function, as we do here, Polymer will call that
+          // _per element instance_.
+          //
+          // We do that to ensure that each element gets its own copy of the
+          // value, rather than having it shared across all instances (via the
+          // prototype).
+          value: function() {
+            return {
+              name:  'Dimitri Glazkov',
+              image: 'http://addyosmani.com/blog/wp-content/uploads/2013/04/unicorn.jpg',
+            };
+          }
+        },
+      },
+
+      // Element Lifecycle
+
+      ready: function() {
+        // `ready` is called after all elements have been configured, but
+        // propagates bottom-up. This element's children are ready, but parents
+        // are not.
+        //
+        // This is the point where you should make modifications to the DOM (when
+        // necessary), or kick off any processes the element wants to perform.
+      },
+
+      attached: function() {
+        // `attached` fires once the element and its parents have been inserted
+        // into a document.
+        //
+        // This is a good place to perform any work related to your element's
+        // visual state or active behavior (measuring sizes, beginning animations,
+        // loading resources, etc).
+      },
+
+      detached: function() {
+        // The analog to `attached`, `detached` fires when the element has been
+        // removed from a document.
+        //
+        // Use this to clean up anything you did in `attached`.
+      },
+
+      // Element Behavior
+
+      /**
+       * Sometimes it's just nice to say hi.
+       *
+       * @param {string} greeting A positive greeting.
+       * @return {string} The full greeting.
+       */
+      sayHello: function(greeting) {
+        var response = greeting || 'Hello World!';
+        return 'uvalib-catalog says, ' + response;
+      },
+
+      /**
+       * The `uvalib-catalog-lasers` event is fired whenever `fireLasers` is called.
+       *
+       * @event uvalib-catalog-lasers
+       * @detail {{sound: String}}
+       */
+
+      /**
+       * Attempt to destroy this element's enemies with a beam of light!
+       *
+       * Or, at least, dispatch an event in the vain hope that someone else will
+       * do the zapping.
+       */
+      fireLasers: function() {
+        this.fire('uvalib-catalog-lasers', {sound: 'Pew pew!'});
+      }
+    });
+  </script>
+</dom-module>
