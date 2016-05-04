@@ -146,6 +146,11 @@ Example:
           type: Object,
           value: {q:''},
           notify: true
+        },
+
+        _filterValueMap: {
+          type: Object,
+          value: {}
         }
 
       },
@@ -177,35 +182,121 @@ Example:
         // Use this to clean up anything you did in `attached`.
       },
 
-      // Element Behavior
-
       /**
-       * Sometimes it's just nice to say hi.
+       * Fired when an error is received.
        *
-       * @param {string} greeting A positive greeting.
-       * @return {string} The full greeting.
+       * @event error
        */
-      sayHello: function(greeting) {
-        var response = greeting || 'Hello World!';
-        return 'uvalib-catalog says, ' + response;
+
+      _handleError: function(err){
+        this.fire('error', err, {bubbles: false});
       },
 
       /**
-       * The `uvalib-catalog-lasers` event is fired whenever `fireLasers` is called.
+       * Fired when a request is sent.
        *
-       * @event uvalib-catalog-lasers
-       * @detail {{sound: String}}
+       * @event request
        */
 
+      _handleRequest: function(req){
+        this.fire('request', req, {bubbles: false});
+      },
+
       /**
-       * Attempt to destroy this element's enemies with a beam of light!
+       * Fired when a response is received.
        *
-       * Or, at least, dispatch an event in the vain hope that someone else will
-       * do the zapping.
+       * @event response
        */
-      fireLasers: function() {
-        this.fire('uvalib-catalog-lasers', {sound: 'Pew pew!'});
+
+      _handleResponse: function(resp){
+        if (this.$.ajax.lastResponse) {
+          this._setItems(this._mapResults(this.$.ajax.lastResponse.response.docs));
+          this._setCount(this.$.ajax.lastResponse.response.numFound);
+          this.fire('response', resp, {bubbles: false});
+        }
+      },
+      _queryChanged: function(){
+        if (this._params) {
+          this.set('_params.q', this.query);
+        }
+      },
+      _mapResults: function(items){
+        return _.map(items,function(item){
+          var obj = {id: item.id,
+                     title: item.title_display.join(', '),
+                     author: (item.author_display && item.author_display.length>0)?
+                                     item.author_display.join(', '):"",
+                     format: (item.format_facet && item.format_facet.length>0)?
+                                     item.format_facet.join(', '):"",
+                     image: "http://search.lib.virginia.edu/catalog/"+obj.id+"/image.jpg"
+                    };
+          if (item.subtitle_display && item.subtitle_display.length>0)
+            obj.title += item.subtitle_display.join(', ');
+          if (item.creator_display && item.creator_display.length>0)
+            obj.creator = item.creator_display.join(', ');
+          return obj;
+        });
+      },
+      areFiltersAvailable: function(selFilters){
+        var filters = this.getFilters();
+        for (var key in selFilters) {
+          var filter = _.find(filters,{id:key});
+          if (filter) {
+            selFilters[key].forEach(function(val){
+              if (!_.find(filter.values,{id:val}))
+                return false
+            }, this);
+          } else {
+            return false;
+          }
+        }
+        return true;
+      },
+      emptyFilters: function(){
+                for (var key in this._params) {
+                  if (key.startsWith('f['))
+                    delete this._params[key];
+                }
+      },
+      setSelectedFilters: function(selFilters){
+                this.emptyFilters();
+                if (!_.isEmpty(selFilters)) {
+                  for (var key in selFilters) {
+                    var filter = _.find(this.filters,{new:key});
+                    if (filter) {
+                      selFilters[key].forEach(function(val){
+                        this.set('_params.f['+filter.orig+'][]', this._filterValueMap[filter.new][val]);
+                      }, this);
+                    }
+                  }
+                }
+      },
+      getFilters: function(){
+                return this._mapFilters(this.$.ajax.lastResponse.facet_counts.facet_fields);
+      },
+      _mapFilters: function(fields){
+                var facets = []
+                this.filters.forEach(function(filter,i){
+                  if (fields[filter.orig])
+                    this._filterValueMap[filter.new] = {};
+                    facets.push({
+                      id: filter.new,
+                      name: filter.name,
+                      values: _.map(_.chunk(fields[filter.orig], 2),
+                                    function(i){
+                                      var id = i[0].replace(/\s/g,'_').toLowerCase();
+                                      this._filterValueMap[filter.new][id] = i[0];
+                                      return {id:id,
+                                              name:i[0],
+                                              count:i[1]};}.bind(this))
+                    });
+                }, this);
+                return facets;
+      },
+      generateRequest: function(){
+                this.$.ajax.generateRequest();
       }
+
     });
   })();
   </script>
