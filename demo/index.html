@@ -52,8 +52,9 @@
     </template>
     <script>
       var app = document.querySelector('#app');
+      var catalog = document.querySelector('#catalog');
       app.submitSearch = function(){
-        document.querySelector('#catalog').generateRequest();
+        catalog.generateRequest();
       };
       app.isPreviousPage = function(){
         return (app.page>1);
@@ -63,9 +64,11 @@
       };
       app.previousPage = function(){
         app.page--;
+        if (!app.auto) catalog.generateRequest();
       }
       app.nextPage = function(){
         app.page++;
+        if (!app.auto) catalog.generateRequest();
       }
     </script>
   </body>
