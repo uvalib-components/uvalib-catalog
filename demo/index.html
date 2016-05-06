@@ -20,7 +20,7 @@
     <template is="dom-bind" id="app">
 
       <uvalib-catalog id="catalog" items="{{items}}" auto="{{auto}}" loading="{{loading}}" count="{{totalCount}}"
-                      debounce-duration="{{debounceDuration}}" query="{{query}}" rows="{{rows}}"></uvalib-catalog>
+                      debounce-duration="{{debounceDuration}}" query="{{query}}" rows="{{rows}}" page="{{page}}"></uvalib-catalog>
 
       <div class="control"><paper-input label="Query" value="{{query}}"></paper-input></div>
       <div class="control">Results below (page count): <paper-slider value="{{rows}}" min="10" max="100" pin></paper-input></div>
@@ -34,6 +34,15 @@
         <template is="dom-if" if="{{loading}}"><strong>Loading...</strong></template>
       </h2>
 
+      <div class="control">
+        <template is="dom-if" if="{{isPreviousPage(rows,page,totalCount)}}">
+          <paper-button raised on-tap="previousPage">Previous Page</paper-button>
+        </template>
+        <template is="dom-if" if="{{isNextPage(rows,page,totalCount)}}">
+          <paper-button raised on-tap="nextPage">Next Page</paper-button>
+        </template>
+      </div>
+
       <ul data-loading$="{{loading}}">
         <template is="dom-repeat" items="{{items}}">
           <li>{{item.title}}</li>
@@ -46,6 +55,18 @@
       app.submitSearch = function(){
         document.querySelector('#catalog').generateRequest();
       };
+      app.isPreviousPage = function(){
+        return (app.page>1);
+      };
+      app.isNextPage = function(){
+        return ((app.page+1)*app.rows<app.totalCount);
+      };
+      app.previousPage = function(){
+        app.page--;
+      }
+      app.nextPage = function(){
+        app.page++;
+      }
     </script>
   </body>
 </html>
