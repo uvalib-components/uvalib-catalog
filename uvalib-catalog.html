@@ -36,6 +36,16 @@ Example:
       properties: {
 
         /**
+         * When true (or set to true) triggers a call to the generateRequest method
+         */
+        trigger: {
+          type: Boolean,
+          value: false,
+          observer: '_triggerRequest',
+          notify: true
+        },
+
+        /**
          * If true, automatically performs an Ajax request when *** Something changes ***
          */
         auto: {
@@ -293,8 +303,15 @@ Example:
                 }, this);
                 return facets;
       },
+      _triggerRequest: function(){
+        console.log('trigger request');
+        if (this.trigger) {
+          console.log('trigger');
+          this.generateRequest();
+        }
+      },
       generateRequest: function(){
-                this.$.ajax.generateRequest();
+          this.$.ajax.generateRequest();
       }
 
     });

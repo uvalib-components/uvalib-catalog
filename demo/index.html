@@ -7,23 +7,44 @@
     <title>uvalib-catalog Demo</title>
     <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
+    <link rel="import" href="../../paper-slider/paper-slider.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
     <link rel="import" href="../uvalib-catalog.html">
   </head>
+  <style>
+    ul[data-loading] {opacity: .30;}
+    div.control {margin-bottom: 10px;}
+  </style>
   <body unresolved>
 
     <template is="dom-bind" id="app">
 
-      <uvalib-catalog items="{{items}}" auto="{{auto}}" loading="{{loading}}"></uvalib-catalog>
+      <uvalib-catalog id="catalog" items="{{items}}" auto="{{auto}}" loading="{{loading}}" count="{{totalCount}}"
+                      debounce-duration="{{debounceDuration}}" query="{{query}}"></uvalib-catalog>
 
-      <paper-toggle-button active="{{auto}}">Auto</paper-toggle-button><br />
+      <div class="control"><paper-input label="Query" value="{{query}}"></paper-input></div>
+      <div class="control"><paper-toggle-button active="{{auto}}">Auto</paper-toggle-button></div>
+      <div class="control">Debounce Duration (milliseconds): <paper-slider value="{{debounceDuration}}" max="5000" pin></paper-slider></div>
+      <div class="control"><paper-button raised disabled="{{auto}}" on-tap="submitSearch">Submit</paper-button></div>
 
-      <h2>Results <template is="dom-if" if="{{loading}}"><strong>Loading...</strong></template></h2>
-      <ul>
+      <h2>
+        <template is="dom-if" if="{{totalCount}}">{{totalCount}}</template>
+        Results
+        <template is="dom-if" if="{{loading}}"><strong>Loading...</strong></template>
+      </h2>
+
+      <ul data-loading$="{{loading}}">
         <template is="dom-repeat" items="{{items}}">
           <li>{{item.title}}</li>
           </template>
       </ul>
-    </template>
 
+    </template>
+    <script>
+      var app = document.querySelector('#app');
+      app.submitSearch = function(){
+        document.querySelector('#catalog').generateRequest();
+      };
+    </script>
   </body>
 </html>
