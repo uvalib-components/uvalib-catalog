@@ -20,9 +20,10 @@
     <template is="dom-bind" id="app">
 
       <uvalib-catalog id="catalog" items="{{items}}" auto="{{auto}}" loading="{{loading}}" count="{{totalCount}}"
-                      debounce-duration="{{debounceDuration}}" query="{{query}}"></uvalib-catalog>
+                      debounce-duration="{{debounceDuration}}" query="{{query}}" rows="{{rows}}"></uvalib-catalog>
 
       <div class="control"><paper-input label="Query" value="{{query}}"></paper-input></div>
+      <div class="control">Results below (page count): <paper-slider value="{{rows}}" min="10" max="100" pin></paper-input></div>
       <div class="control"><paper-toggle-button active="{{auto}}">Auto</paper-toggle-button></div>
       <div class="control">Debounce Duration (milliseconds): <paper-slider value="{{debounceDuration}}" max="5000" pin></paper-slider></div>
       <div class="control"><paper-button raised disabled="{{auto}}" on-tap="submitSearch">Submit</paper-button></div>
