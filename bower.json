@@ -29,5 +29,9 @@
     "paper-slider": "^1.0.10",
     "paper-input": "^1.1.11",
     "paper-button": "^1.0.11"
+  },
+  "resolutions": {
+    "lodash": "^4.11.2"
   }
+
 }
