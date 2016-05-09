@@ -148,6 +148,7 @@ Example:
           value: 10,
           observer: '_rowsChanged'
         },
+
         /**
          * The page of results to return to items
          **/
@@ -243,21 +244,34 @@ Example:
           this.fire('response', resp, {bubbles: false});
         }
       },
+
+      /**
+       * Update the AJAX query API parameter when the query property is changed.
+       */
       _queryChanged: function(){
         if (this._params) {
           this.set('_params.q', this.query);
         }
       },
+
+      /**
+       * Update the AJAX per_page API parameter when the rows property is changed.
+       */
       _rowsChanged: function(){
         if (this._params) {
           this.set('_params.per_page', this.rows);
         }
       },
+
+      /**
+       * Update the AJAX page API parameter when the page property is changed.
+       */
       _pageChanged: function(){
         if (this._params) {
           this.set('_params.page', this.page);
         }
       },
+
       _mapResults: function(items){
         return _.map(items,function(item){
           var obj = {id: item.id,
@@ -275,6 +289,7 @@ Example:
           return obj;
         });
       },
+
       areFiltersAvailable: function(selFilters){
         var filters = this.getFilters();
         for (var key in selFilters) {
@@ -290,12 +305,14 @@ Example:
         }
         return true;
       },
+
       emptyFilters: function(){
                 for (var key in this._params) {
                   if (key.startsWith('f['))
                     delete this._params[key];
                 }
       },
+
       setSelectedFilters: function(selFilters){
                 this.emptyFilters();
                 if (!_.isEmpty(selFilters)) {
@@ -309,9 +326,11 @@ Example:
                   }
                 }
       },
+
       getFilters: function(){
                 return this._mapFilters(this.$.ajax.lastResponse.facet_counts.facet_fields);
       },
+
       _mapFilters: function(fields){
                 var facets = []
                 this.filters.forEach(function(filter,i){
@@ -331,6 +350,10 @@ Example:
                 }, this);
                 return facets;
       },
+
+      /**
+       * Trigger the component to generate another request.
+       */
       _triggerRequest: function(){
         console.log('trigger request');
         if (this.trigger) {
@@ -338,7 +361,10 @@ Example:
           this.generateRequest();
         }
       },
-      
+
+      /**
+       * Generate an AJAX request for this component.
+       */
       generateRequest: function(){
           this.$.ajax.generateRequest();
       },
@@ -352,7 +378,7 @@ Example:
           this.page += 1;
           this.trigger = true;
         }
-      }
+      },
 
     });
   })();
