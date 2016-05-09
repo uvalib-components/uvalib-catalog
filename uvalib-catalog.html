@@ -346,8 +346,11 @@ Example:
        * Get next page of catalog items for the search query.
        */
       more: function() {
-        this.page += 1;
-        this.trigger = true;
+        var rowsRetrieved = this.page * rows;
+        if (rowsRetrieved < this.count) {
+          this.page += 1;
+          this.trigger = true;
+        }
       }
 
     });
