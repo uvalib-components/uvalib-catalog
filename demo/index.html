@@ -67,8 +67,7 @@
         if (!app.auto) document.querySelector('#catalog').generateRequest();
       }
       app.nextPage = function(){
-        app.page++;
-        if (!app.auto) document.querySelector('#catalog').generateRequest();
+        document.querySelector('#catalog').more();
       }
     </script>
   </body>

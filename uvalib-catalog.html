@@ -373,10 +373,12 @@ Example:
        * Get next page of catalog items for the search query.
        */
       more: function() {
-        var rowsRetrieved = this.page * rows;
+        var rowsRetrieved = this.page * this.rows;
         if (rowsRetrieved < this.count) {
           this.page += 1;
-          this.trigger = true;
+          if (! this.auto) {
+            this.generateRequest();
+          }
         }
       },
 
