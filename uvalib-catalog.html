@@ -217,7 +217,7 @@ Example:
        * @event error
        */
 
-      _handleError: function(err){
+      _handleError: function(err) {
         this.fire('error', err, {bubbles: false});
       },
 
@@ -227,7 +227,7 @@ Example:
        * @event request
        */
 
-      _handleRequest: function(req){
+      _handleRequest: function(req) {
         this.fire('request', req, {bubbles: false});
       },
 
@@ -237,7 +237,7 @@ Example:
        * @event response
        */
 
-      _handleResponse: function(resp){
+      _handleResponse: function(resp) {
         if (this.$.ajax.lastResponse) {
           this._setItems(this._mapResults(this.$.ajax.lastResponse.response.docs));
           this._setCount(this.$.ajax.lastResponse.response.numFound);
@@ -248,7 +248,7 @@ Example:
       /**
        * Update the AJAX query API parameter when the query property is changed.
        */
-      _queryChanged: function(){
+      _queryChanged: function() {
         if (this._params) {
           this.set('_params.q', this.query);
         }
@@ -257,7 +257,15 @@ Example:
       /**
        * Update the AJAX per_page API parameter when the rows property is changed.
        */
-      _rowsChanged: function(){
+      _rowsChanged: function() {
+        // Make sure a negative value does not occur.
+        if (this.rows < 1) {
+          this.rows = 1;
+        }
+        // Make sure the number of rows does not exceed the total count of items.
+        if (this.rows > this.count) {
+          this.rows = this.count;
+        }
         if (this._params) {
           this.set('_params.per_page', this.rows);
         }
@@ -266,7 +274,11 @@ Example:
       /**
        * Update the AJAX page API parameter when the page property is changed.
        */
-      _pageChanged: function(){
+      _pageChanged: function() {
+        // Make sure a negative value does not occur.
+        if (this.page < 0) {
+          this.page = 0;
+        }
         if (this._params) {
           this.set('_params.page', this.page);
         }
