@@ -52,9 +52,9 @@
     </template>
     <script>
       var app = document.querySelector('#app');
-      var catalog = document.querySelector('#catalog');
+
       app.submitSearch = function(){
-        catalog.generateRequest();
+        document.querySelector('#catalog').generateRequest();
       };
       app.isPreviousPage = function(){
         return (app.page>1);
@@ -64,11 +64,11 @@
       };
       app.previousPage = function(){
         app.page--;
-        if (!app.auto) catalog.generateRequest();
+        if (!app.auto) document.querySelector('#catalog').generateRequest();
       }
       app.nextPage = function(){
         app.page++;
-        if (!app.auto) catalog.generateRequest();
+        if (!app.auto) document.querySelector('#catalog').generateRequest();
       }
     </script>
   </body>
