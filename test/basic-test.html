@@ -22,47 +22,79 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <test-fixture id="uvalib-catalog-fixture">
+
+    <test-fixture id="uvalib-no-search">
       <template>
-        <uvalib-catalog>
-          <h2>uvalib-catalog</h2>
-        </uvalib-catalog>
+        <uvalib-catalog id="noSearch" ></uvalib-catalog>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="uvalib-user-experience-search">
+      <template>
+        <uvalib-catalog id="uxSearch" auto="true" query="user experience" rows="15"></uvalib-catalog>
       </template>
     </test-fixture>
 
     <script>
       suite('<uvalib-catalog>', function() {
 
-        var myEl;
+        var noSearch, uxSearchResults;
 
         setup(function() {
-          myEl = fixture('uvalib-catalog-fixture');
+          noSearch = fixture('uvalib-no-search');
+          uxSearchResults = fixture('uvalib-user-experience-search');
         });
 
-        test('defines the "author" property', function() {
-          assert.equal(myEl.author.name, 'Dimitri Glazkov');
-          assert.equal(myEl.author.image, 'http://addyosmani.com/blog/wp-content/uploads/2013/04/unicorn.jpg');
+        // Catalog component with no search performed...
+        // Total count of items should be zero.
+        // Page should be 1.
+        // Rows should be ten.
+        // Items should never be null.
+        test('Catalog component with no search', function() {
+          assert.equal(noSearch.count, 0, 'no search does not have 0 total count');
+          assert.equal(noSearch.page, 1, 'no search does not return 1 for page');
+          assert.equal(noSearch.rows, 10, 'no search does not indicate 10 rows');
+          assert.equal(noSearch.query, "", 'no search query string is not empty');
+          assert.isNotNull(noSearch.items, 'no search items array is null');
         });
 
-        test('says hello', function() {
-          assert.equal(myEl.sayHello(), 'uvalib-catalog says, Hello World!');
-
-          var greetings = myEl.sayHello('greetings Earthlings');
-          assert.equal(greetings, 'uvalib-catalog says, greetings Earthlings');
+        // Trying to set catalog rows to a negative number should fail.
+        test('Catalog component with negative rows value', function() {
+          noSearch.rows = noSearch.rows - 20;
+          assert.isAbove(noSearch.rows, 0, 'no search rows is negative');
         });
 
-        test('fires lasers', function(done) {
-          myEl.addEventListener('uvalib-catalog-lasers', function(event) {
-            assert.equal(event.detail.sound, 'Pew pew!');
-            done();
+        // Page should never be negative.
+        test('Catalog component with negative page value', function() {
+          noSearch.page = noSearch.page - 2;
+          assert.equal(noSearch.page, 0, 'no search page is negative');
+        });
+
+        // When auto is false changing the params should not return new results.
+        test('Catalog component with auto and query change', function() {
+          var total = noSearch.count;
+          noSearch.auto = false;
+          noSearch.query = "new query";
+          assert.equal(total, noSearch.count, 'no search with auto false and new query string runs automatically');
+        });
+
+        // When auto is true changing the params should return new results.
+        test('Article component with auto and query change', function(done) {
+          var isDone = false;
+          this.timeout(5000);
+          uxSearchResults.page=2;
+          uxSearchResults.rows=30;
+          uxSearchResults.auto="true";
+          uxSearchResults.query="dogs";
+          uxSearchResults.addEventListener('response', function(event) {
+            assert.isAbove(uxSearchResults.count, 0, 'UX search with auto true and query string does not run automatically');
+            assert.equal(uxSearchResults.page, 2, 'UX search result change request for page 2 did not work');
+            assert.equal(uxSearchResults.rows, 30, 'UX search result change for 30 rows returned did not work');
+            if (!isDone) {
+              isDone = true;
+              done();
+            }
           });
-          myEl.fireLasers();
-        });
-
-        test('distributed children', function() {
-          var els = myEl.getContentChildren();
-          assert.equal(els.length, 1, 'one distributed node');
-          assert.equal(els[0], myEl.querySelector('h2'), 'content distributed correctly');
         });
 
       });

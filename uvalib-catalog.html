@@ -46,7 +46,8 @@ Example:
         },
 
         /**
-         * If true, automatically performs an Ajax request when *** Something changes ***
+         * If true, automatically performs an Ajax request when either `query`,
+         * `page`, or `rows` changes.
          */
         auto: {
           type: Boolean,
@@ -58,6 +59,7 @@ Example:
          */
         count: {
           type: Number,
+          value: 0,
           notify: true,
           readOnly: true
         },
@@ -263,8 +265,10 @@ Example:
           this.rows = 1;
         }
         // Make sure the number of rows does not exceed the total count of items.
-        if (this.rows > this.count) {
-          this.rows = this.count;
+        if (this.count > 0) {
+          if (this.rows > this.count) {
+            this.rows = this.count;
+          }
         }
         if (this._params) {
           this.set('_params.per_page', this.rows);
