@@ -218,17 +218,15 @@ Example:
        *
        * @event error
        */
-
       _handleError: function(err) {
         this.fire('error', err, {bubbles: false});
       },
 
       /**
-       * Fired when a request is sent.
+       * Fired when catalog search results are returned.
        *
        * @event request
        */
-
       _handleRequest: function(req) {
         this.fire('request', req, {bubbles: false});
       },
@@ -238,7 +236,6 @@ Example:
        *
        * @event response
        */
-
       _handleResponse: function(resp) {
         if (this.$.ajax.lastResponse) {
           this._setItems(this._mapResults(this.$.ajax.lastResponse.response.docs));
@@ -288,6 +285,9 @@ Example:
         }
       },
 
+      /**
+       * Map some of the detail results for a catalog item to a set of common labels.
+       */
       _mapResults: function(items){
         return _.map(items,function(item){
           var obj = {id: item.id,
@@ -306,6 +306,11 @@ Example:
         });
       },
 
+      /**
+       * Determine if there are facets returned with the search results that could be used to refine the search.
+       *
+       * @return {Boolean}
+       */
       areFiltersAvailable: function(selFilters){
         var filters = this.getFilters();
         for (var key in selFilters) {
@@ -322,6 +327,9 @@ Example:
         return true;
       },
 
+      /**
+       * Clear out the selected filters set as part of the query.
+       */
       emptyFilters: function(){
                 for (var key in this._params) {
                   if (key.startsWith('f['))
@@ -329,6 +337,11 @@ Example:
                 }
       },
 
+      /**
+       * Set the search facets to use in the article request.
+       *
+       * @param {Array}
+       */
       setSelectedFilters: function(selFilters){
                 this.emptyFilters();
                 if (!_.isEmpty(selFilters)) {
@@ -343,10 +356,21 @@ Example:
                 }
       },
 
+      /**
+       * Get the search facets used in the article request.
+       *
+       * @return {Array}
+       */
       getFilters: function(){
                 return this._mapFilters(this.$.ajax.lastResponse.facet_counts.facet_fields);
       },
 
+      /**
+       * Retrieves the facets that were used as part of the search.
+       *
+       * @param {Array} fields
+       * @return {Array}
+       */
       _mapFilters: function(fields){
                 var facets = []
                 this.filters.forEach(function(filter,i){
@@ -379,7 +403,7 @@ Example:
       },
 
       /**
-       * Generate an AJAX request for this component.
+       * Generate an AJAX request to get catalog items based on the query.
        */
       generateRequest: function(){
           this.$.ajax.generateRequest();
