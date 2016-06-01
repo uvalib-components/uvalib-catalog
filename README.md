@@ -1,4 +1,4 @@
-# uvalib-catalog
+# uvalib-catalog [![Build Status](https://travis-ci.org/uvalib-components/uvalib-catalog.svg?branch=master)](https://travis-ci.org/uvalib-components/uvalib-catalog)
 
 An element providing a starting point for your own reusable Polymer elements.
 

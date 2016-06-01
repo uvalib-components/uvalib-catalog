@@ -42,6 +42,10 @@
         <template is="dom-if" if="{{isNextPage(rows,page,totalCount)}}">
           <paper-button raised on-tap="nextPage">Next Page</paper-button>
         </template>
+        <template is="dom-if" if="{{isNextPage(rows,page,totalCount)}}">
+          <paper-button raised on-tap="openFacets">View Facets</paper-button>
+          <paper-filter-dialog id="filter-dialog" filters="{{filters}}" selected-filters="{{selectedFilters}}" on-save="saveFilters"></paper-filter-dialog>
+        </template>
       </div>
 
       <ul data-loading$="{{loading}}">
@@ -49,13 +53,6 @@
           <li>{{item.title}}</li>
           </template>
       </ul>
-
-      <div class="control">
-        <template is="dom-if" if="{{isNextPage(rows,page,totalCount)}}">
-          <paper-button raised on-tap="openFacets">View Facets</paper-button>
-          <paper-filter-dialog id="filter-dialog" filters="{{filters}}" selected-filters="{{selectedFilters}}" on-save="saveFilters"></paper-filter-dialog>
-        </template>
-      </div>
 
     </template>
     <script>
