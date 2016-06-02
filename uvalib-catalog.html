@@ -302,7 +302,7 @@ Example:
                      image: "http://search.lib.virginia.edu/catalog/"+item.id+"/image.jpg"
                     };
           if (item.subtitle_display && item.subtitle_display.length>0)
-            obj.title += item.subtitle_display.join(', ');
+            obj.title += ': ' + item.subtitle_display.join(', ');
           if (item.creator_display && item.creator_display.length>0)
             obj.creator = item.creator_display.join(', ');
           return obj;
