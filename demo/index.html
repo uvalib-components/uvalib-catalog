@@ -10,6 +10,7 @@
     <link rel="import" href="../../paper-search/paper-search.html">
     <link rel="import" href="../../paper-slider/paper-slider.html">
     <link rel="import" href="../../paper-button/paper-button.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../uvalib-catalog.html">
   </head>
   <style>
@@ -17,6 +18,9 @@
     div.control {margin-bottom: 10px;}
   </style>
   <body unresolved>
+
+<demo-snippet>
+  <template>
 
     <template is="dom-bind" id="app">
 
@@ -55,6 +59,11 @@
       </ul>
 
     </template>
+
+  </template>
+</demo-snippet>
+
+
     <script>
       var app = document.querySelector('#app');
       var selectedFilters;
