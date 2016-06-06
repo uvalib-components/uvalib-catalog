@@ -84,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.timeout(5000);
           uxSearchResults.page=2;
           uxSearchResults.rows=30;
-          uxSearchResults.auto="true";
+          uxSearchResults.auto=true;
           uxSearchResults.query="dogs";
           uxSearchResults.addEventListener('response', function(event) {
             assert.isAbove(uxSearchResults.count, 0, 'UX search with auto true and query string does not run automatically');
