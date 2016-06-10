@@ -376,7 +376,11 @@ Example:
        * @return {Array}
        */
       getFilters: function(){
-                return this._mapFilters(this.$.ajax.lastResponse.facet_counts.facet_fields);
+        if (this.$.ajax.lastResponse && this.$.ajax.lastResponse.facet_counts) {
+          return this._mapFilters(this.$.ajax.lastResponse.facet_counts.facet_fields);
+        } else {
+          return null;
+        }
       },
 
       /**
