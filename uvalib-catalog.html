@@ -23,7 +23,7 @@ Example:
           loading="{{loading}}" params="{{_params}}"
           timeout="{{timeout}}" url="{{_url}}" verbose="{{verbose}}"
           on-error="_handleError" on-request="_handleRequest" on-response="_handleResponse"
-          last-error="lastError" handle-as="json"></iron-ajax>
+          last-error="{{lastError}}" last-request="{{lastRequest}}" handle-as="json"></iron-ajax>
   </template>
 
   <script>
@@ -160,6 +160,14 @@ Example:
           notify: true,
           value: 1,
           observer: '_pageChanged'
+        },
+
+        /**
+         * The most recent request made by this element (raw pre-processed).
+         */
+        lastRequest: {
+          type: Object,
+          notify: true,
         },
 
         /**
