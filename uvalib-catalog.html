@@ -284,24 +284,30 @@ Example:
 
       /**
        * Determine if there are facets returned with the search results that could be used to refine the search.
+       * Can return a false positive
        *
        * @param {Array} selFilters - The user selected facets.
        * @return {Boolean}
        */
       areFiltersAvailable: function(selFilters){
         var filters = this.getFilters();
-        for (var key in selFilters) {
-          var filter = _.find(filters,{id:key});
-          if (filter) {
-            selFilters[key].forEach(function(val){
-              if (!_.find(filter.values,{id:val}))
-                return false
-            }, this);
-          } else {
-            return false;
+        if (filters) {
+          for (var key in selFilters) {
+            var filter = _.find(filters,{id:key});
+            if (filter) {
+              selFilters[key].forEach(function(val){
+                if (!_.find(filter.values,{id:val}))
+                  return false
+                }, this);
+            } else {
+              return false;
+            }
           }
+          return true;
+        } else {
+          // we don't know what filters are available yet, return false positive
+          return true;
         }
-        return true;
       },
 
       /**
