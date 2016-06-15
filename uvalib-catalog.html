@@ -103,9 +103,18 @@ Example:
          */
         query: {
           type: String,
-          notify: true,
+          //notify: true,
           value: "",
           observer: "_queryChanged"
+        },
+
+        /**
+         * The selected filters
+         */
+        selectedFilters: {
+          type: Object,
+          value: {},
+          observer: "_selectedFiltersChanged"
         },
 
         /**
@@ -176,7 +185,7 @@ Example:
          */
         _params: {
           type: Object,
-          value: {q:'',per_page:10, page:1},
+          value: {sort_key:'relevancy', per_page:10, page:1},
           notify: true
         },
 
@@ -320,27 +329,55 @@ Example:
                 }
       },
 
+      _selectedFiltersChanged: function(){
+        this.setSelectedFilters(this.selectedFilters);
+      },
+
+      _normalizeFilterValues: function(filterName, valueArray){
+        if (this._filterValueMap && this._filterValueMap[filterName]) {
+          return _.map(function(filt){
+            if (this._filterValueMap[filterName])
+              return this._filterValueMap[filterName][filt];
+            else
+              return filt;
+          });
+        } else {
+          return valueArray;
+        }
+      },
+
       /**
        * Set the search facets to use in the article request.
        *
        * @param {Array} selFilters - The user selected facets.
        */
       setSelectedFilters: function(selFilters){
-                this.emptyFilters();
-                if (!_.isEmpty(selFilters)) {
-                  for (var key in selFilters) {
-                    var filter = _.find(this._filterMap,{new:key});
-                    if (filter) {
-                      selFilters[key].forEach(function(val){
-                        if (this._filterValueMap[filter.new])
-                          this.set('_params.f['+filter.orig+'][]', this._filterValueMap[filter.new][val]);
-                        else {
-                          this.set('_params.f['+filter.orig+'][]', val);
-                        }
-                      }, this);
-                    }
-                  }
+        this.emptyFilters();
+        if (!_.isEmpty(selFilters)) {
+          for (var key in selFilters) {
+            var filter = _.find(this._filterMap,{new:key});
+            if (filter) {
+              var selFilter = selFilters[key];
+              if (Array.isArray(selFilter)) {  // Array
+                // Assume that these are exclusive
+                this.set('_params.f['+filter.orig+'][]', this._normalizeFilterValues(filter.new, selFilter));
+              } else if (selFilter.inclusive || selFilter.exclusive) { // Object that is inclusive or exclusive Array
+                //  todo: handle exclusive arrays
+                if (selFilter.inclusive && Array.isArray(selFilter.inclusive)) {
+                  this._normalizeFilterValues(filter.new, selFilter.inclusive)
+                      .forEach(function(filt){
+                              this.set('_params.f_inclusive['+filter.orig+']['+filt+']', 1);
+                          }.bind(this));
                 }
+              } else if (typeof selFilter === 'string' || selFilter instanceof String) {
+                this.set('_params.f['+filter.orig+'][]', this._normalizeFilterValues(filter.new, [selFilter]));
+              } else {
+                // use the value
+                this.set('_params.f['+filter.orig+'][]', selFilter);
+              }
+            }
+          }
+        }
       },
 
       /**
