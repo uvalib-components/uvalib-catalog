@@ -332,7 +332,11 @@ Example:
                     var filter = _.find(this._filterMap,{new:key});
                     if (filter) {
                       selFilters[key].forEach(function(val){
-                        this.set('_params.f['+filter.orig+'][]', this._filterValueMap[filter.new][val]);
+                        if (this._filterValueMap[filter.new])
+                          this.set('_params.f['+filter.orig+'][]', this._filterValueMap[filter.new][val]);
+                        else {
+                          this.set('_params.f['+filter.orig+'][]', val);
+                        }
                       }, this);
                     }
                   }
