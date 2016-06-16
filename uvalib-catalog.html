@@ -339,7 +339,7 @@ Example:
                 return this._filterValueMap[filterName][filt];
             else
               return filt;
-          });
+          }.bind(this));
         } else {
           return valueArray;
         }
