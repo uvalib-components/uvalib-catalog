@@ -334,7 +334,7 @@ Example:
 
       _normalizeFilterValues: function(filterName, valueArray){
         if (this._filterValueMap && this._filterValueMap[filterName]) {
-          return _.map(function(filt){
+          return _.map(valueArray, function(filt){
             if (this._filterValueMap[filterName] && this._filterValueMap[filterName][filt])
                 return this._filterValueMap[filterName][filt];
             else
