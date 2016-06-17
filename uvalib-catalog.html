@@ -105,6 +105,14 @@ Example:
         },
 
         /**
+         * The id of the item
+         */
+        itemId: {
+          type: String,
+          value: null
+        },
+
+        /**
          * The selected filters
          */
         selectedFilters: {
@@ -171,6 +179,7 @@ Example:
          */
         _url: {
           type: String,
+          computed: '_makeURL(itemId)',
           value: "https://api.library.virginia.edu/search/catalog.json",
           readOnly: true
         },
@@ -181,7 +190,7 @@ Example:
          */
         _params: {
           type: Object,
-          computed: '_makeParams(query,rows,page,selectedFilters)',
+          computed: '_makeParams(itemId,query,rows,page,selectedFilters)',
           readOnly: true
         },
 
@@ -193,12 +202,23 @@ Example:
 
       },
 
-      _makeParams: function(query, rows, page, selectedFilters){
-        var params = this._getSelectedFilterParams(selectedFilters);
-        params.per_page = rows;
-        if (query) params.q = query;
-        params.page = page;
-        return params;
+      _makeURL: function(id){
+        if (id) {
+          return "https://api.library.virginia.edu/search/catalog/"+id+".json";
+        } else {
+          return "https://api.library.virginia.edu/search/catalog.json";
+        }
+      },
+
+      _makeParams: function(id, query, rows, page, selectedFilters){
+        if (id) return {}
+        else {
+          var params = this._getSelectedFilterParams(selectedFilters);
+          params.per_page = rows;
+          if (query) params.q = query;
+          params.page = page;
+          return params;
+        }
       },
 
       /**
