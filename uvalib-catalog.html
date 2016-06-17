@@ -196,7 +196,7 @@ Example:
       _makeParams: function(query, rows, page, selectedFilters){
         var params = this._getSelectedFilterParams(selectedFilters);
         params.per_page = rows;
-        params.q = query;
+        if (query) params.q = query;
         params.page = page;
         return params;
       },
@@ -244,8 +244,8 @@ Example:
 
       _pageChanged: function() {
         // Make sure a negative value does not occur.
-        if (this.page < 0) {
-          this.page = 0;
+        if (this.page < 1) {
+          this.page = 1;
         }
       },
 
@@ -300,20 +300,6 @@ Example:
         }
       },
 
-      /**
-       * Clear out the selected filters set as part of the query.
-       */
-      emptyFilters: function(){
-                for (var key in this._params) {
-                  if (key.startsWith('f['))
-                    delete this._params[key];
-                }
-      },
-
-//      _selectedFiltersChanged: function(){
-//        this.setSelectedFilters(this.selectedFilters);
-//      },
-
       _normalizeFilterValues: function(filterName, valueArray){
         if (this._filterValueMap && this._filterValueMap[filterName]) {
           return _.map(valueArray, function(filt){
@@ -327,10 +313,8 @@ Example:
         }
       },
 
-//      setSelectedFilters: function(selFilters){
       _getSelectedFilterParams: function(selFilters){
         var params = {};
-        this.emptyFilters();
         if (!_.isEmpty(selFilters)) {
           for (var key in selFilters) {
             var filter = _.find(this._filterMap,{new:key});
@@ -338,7 +322,6 @@ Example:
               var selFilter = selFilters[key];
               if (Array.isArray(selFilter)) {  // Array
                 // Assume that these are exclusive
-//                this.set('_params.f['+filter.orig+'][]', this._normalizeFilterValues(filter.new, selFilter));
                 params['f['+filter.orig+'][]'] = this._normalizeFilterValues(filter.new, selFilter);
               } else if (selFilter.inclusive || selFilter.exclusive) { // Object that is inclusive or exclusive Array
                 //  todo: handle exclusive arrays
@@ -346,16 +329,13 @@ Example:
                   this._normalizeFilterValues(filter.new, selFilter.inclusive)
                       .forEach(function(filt){
                               params['f_inclusive['+filter.orig+']['+filt+']']=1;
-//                              this.set('_params.f_inclusive['+filter.orig+']['+filt+']', 1);
                           }.bind(this));
                 }
               } else if (typeof selFilter === 'string' || selFilter instanceof String) {
                 params['f['+filter.orig+'][]'] = this._normalizeFilterValues(filter.new, [selFilter]);
-//                this.set('_params.f['+filter.orig+'][]', this._normalizeFilterValues(filter.new, [selFilter]));
               } else {
                 // use the value
                 params['f['+filter.orig+'][]'] = selFilter;
-//                this.set('_params.f['+filter.orig+'][]', selFilter);
               }
             }
           }
