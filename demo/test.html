@@ -9,19 +9,15 @@
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../uvalib-catalog.html">
   </head>
-  <style>
-    ul[data-loading] {opacity: .30;}
-    div.control {margin-bottom: 10px;}
-  </style>
   <body unresolved>
-<!--
+
 <demo-snippet id="demo">
   <template>
--->
+
     <template is="dom-bind" id="app">
 
-      <uvalib-catalog id="catalog" items="{{items}}" auto loading="{{loading}}"
-          count="{{totalCount}}" selected-filters$="{{selectedFilters}}"></uvalib-catalog>
+      <uvalib-catalog id="catalog" items="{{items}}" auto
+          rows=20 selected-filters='{"format":["Book"]}'></uvalib-catalog>
 
       <ul data-loading$="{{loading}}">
         <template is="dom-repeat" items="{{items}}">
@@ -31,14 +27,9 @@
 
     </template>
 
-<!--
+
   </template>
 </demo-snippet>
--->
 
-    <script>
-      var app = document.querySelector('#app');
-      app.selectedFilters = {'format':['Book'],'library':{'inclusive':['Alderman','Astronomy','Biology & Psychology','Chemistry','Darden Business School','Ivy','Ivy Stacks','Mathematics','Physics','Special Collections','Law School','Fine Arts','Brown Sel','Clemons','Health Sciences','Music']}};
-    </script>
   </body>
 </html>
