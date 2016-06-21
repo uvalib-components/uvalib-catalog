@@ -85,7 +85,19 @@ Example:
         },
 
         /**
-         * The items from the Catalog request, in a normalized/simplified Format
+         * The first item returned from the Catalog request, in a normalized/simplified Format
+         *
+         * @type {Object}
+         */
+        item: {
+          type: Object,
+          notify: true,
+          readOnly: true,
+          computed: "_getFirst(items)"
+        },
+
+        /**
+         * The items returned from the Catalog request, in a normalized/simplified Format
          *
          * @type {Object[]}
          */
@@ -200,6 +212,13 @@ Example:
           readOnly: true
         }
 
+      },
+
+      _getFirst: function(list){
+        if (Array.isArray(list))
+          return list[0];
+        else
+          return null;
       },
 
       _makeURL: function(id){
