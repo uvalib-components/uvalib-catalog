@@ -117,6 +117,7 @@ Example:
         var holdings = _.filter(response.querySelectorAll('holding'), function(o){return o.getAttribute('shadowed')==="false"});
         return _.map(holdings,function(holding){
           return {
+            library: holding.querySelector('library').getAttribute('code'),
             callNumber: holding.getAttribute('callNumber'),
             callSequence: holding.getAttribute('callSequence'),
             holdable: holding.getAttribute('holdable'),
