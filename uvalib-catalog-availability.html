@@ -118,10 +118,8 @@ Example:
           var copies = _.filter(holding.querySelectorAll('copy'), function(o){return o.getAttribute('shadowed')==="false"}),
               library = holding.querySelector('library');
           return {
-            library: {
-              code: library.getAttribute('code'),
-              id: library.getAttribute('id')
-            },
+            libraryCode: library.getAttribute('code'),
+            libraryId: library.getAttribute('id'),
             callNumber: holding.getAttribute('callNumber'),
             callSequence: holding.getAttribute('callSequence'),
             holdable: holding.getAttribute('holdable'),
