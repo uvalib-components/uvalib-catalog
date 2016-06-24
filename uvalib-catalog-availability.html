@@ -108,8 +108,10 @@ Example:
       },
 
       _computeHoldable: function(response){
-        var canHold = response.querySelector('canHold');
-        return (canHold && canHold.getAttribute('value') != 'no')? true:false;
+        if (response) {
+          var canHold = response.querySelector('canHold');
+          return (canHold && canHold.getAttribute('value') != 'no')? true:false;
+        } else return null;
       },
 
       _computeholdings: function(response){
