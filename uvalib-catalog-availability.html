@@ -115,11 +115,40 @@ Example:
       _computeholdings: function(response){
         var holdings = _.filter(response.querySelectorAll('holding'), function(o){return o.getAttribute('shadowed')==="false"});
         return _.map(holdings,function(holding){
+          var copies = _.filter(holding.querySelectorAll('copy'), function(o){return o.getAttribute('shadowed')==="false"}),
+              library = holding.querySelector('library');
           return {
-            library: holding.querySelector('library').getAttribute('code'),
+            library: {
+              code: library.getAttribute('code'),
+              id: library.getAttribute('id')
+            },
             callNumber: holding.getAttribute('callNumber'),
             callSequence: holding.getAttribute('callSequence'),
             holdable: holding.getAttribute('holdable'),
+            copies: _.map(copies, function(o){
+              var currLoc = o.querySelector('currentLocation'),
+                  homeLoc = o.querySelector('homeLocation'),
+                  itemType = o.querySelector('itemType');
+              return {
+                barcode: o.getAttribute('barCode'),
+                circulate: o.querySelector('circulate').textContent === 'y',
+                currentLocation: {
+                  code: currLoc.getAttribute('code'),
+                  id: currLoc.getAttribute('id'),
+                  name: currLoc.querySelector('name').textContent
+                },
+                homeLocation: {
+                  code: homeLoc.getAttribute('code'),
+                  id: homeLoc.getAttribute('id'),
+                  name: homeLoc.querySelector('name').textContent
+                },
+                itemType: {
+                  code: itemType.getAttribute('code'),
+                  id: itemType.getAttribute('id')
+                },
+                lastCheckout: o.querySelector('lastCheckout').textContent
+              };
+            })
           };
         });
       },
