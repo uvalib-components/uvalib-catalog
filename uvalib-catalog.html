@@ -314,7 +314,7 @@ Example:
 
       _makeImageURL: function(item){
         if (item.content_model_facet && item.content_model_facet.indexOf("jp2k")>-1)
-          return "https://fedoraproxy.lib.virginia.edu/fedora/get/"+item.id+"/djatoka:StaticSDef/getThumbnail";
+          return "http://iiif.lib.virginia.edu/iiif/"+item.id+"/full/!250,250/0/default.jpg";
         else
           return "http://search.lib.virginia.edu/catalog/"+item.id+"/image.jpg"
       },
