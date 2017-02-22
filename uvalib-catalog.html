@@ -186,13 +186,17 @@ Example:
           readOnly: true
         },
 
+        _urlBase: {
+          type: String,
+          value: "https://search.lib.virginia.edu/catalog"
+        },
+
         /**
          * The base url used to make requests to the catalog. ***This should change when we are no longer using the proxy for CORS support***
          */
         _url: {
           type: String,
-          computed: '_makeURL(itemId)',
-          value: "https://api.library.virginia.edu/search/catalog.json",
+          computed: '_makeURL(itemId, _urlBase)',
           readOnly: true
         },
 
@@ -223,9 +227,9 @@ Example:
 
       _makeURL: function(id){
         if (id) {
-          return "https://api.library.virginia.edu/search/catalog/"+id+".json";
+          return this._urlBase + "/" + id + ".json";
         } else {
-          return "https://api.library.virginia.edu/search/catalog.json";
+          return this._urlBase + ".json";
         }
       },
 
