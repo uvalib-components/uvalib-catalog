@@ -16,13 +16,26 @@
   <style>
     ul[data-loading] {opacity: .30;}
     div.control {margin-bottom: 10px;}
+    demo-snippet {margin-bottom: 25px;}
   </style>
   <body unresolved>
-<!--
+
+<h2>Request a catalog item by ID</h2>
+<demo-snippet id="byid">
+  <template is="dom-bind">
+    <uvalib-catalog item-id="u5722095" auto item="{{item}}"></uvalib-catalog>
+    <dl>
+      <dt>Author</dt>
+      <dd>{{item.author}}</dd>
+      <dt>Title</dt>
+      <dd>{{item.title}}</dd>
+    </dl>
+  </template>
+</demo-snippet>
+
+<h2>Simple search interface showing options</h2>
 <demo-snippet id="demo">
-  <template>
--->
-    <template is="dom-bind" id="app">
+  <template is="dom-bind" id="app">
 
       <uvalib-catalog id="catalog" items="{{items}}" auto="{{auto}}" loading="{{loading}}" count="{{totalCount}}" filters="{{filters}}"
                       debounce-duration="{{debounceDuration}}" query="{{query}}" rows="{{rows}}" page="{{page}}"></uvalib-catalog>
@@ -58,12 +71,9 @@
           </template>
       </ul>
 
-    </template>
 
-<!--
   </template>
 </demo-snippet>
--->
 
     <script>
       var app = document.querySelector('#app');

@@ -5,9 +5,9 @@
 <!--
 An element used to interface with the UVa Library Catalog API via ajax.
 
-Example:
+Example get item by id (look for the item in the 'item' property):
 
-    <uvalib-catalog auto></uvalib-catalog>
+    <uvalib-catalog item-id="u5722095" auto></uvalib-catalog>
 
 Example:
 
@@ -45,7 +45,7 @@ Example:
         },
 
         /**
-         * Total number of results in the last response ***(not just the returned rows)***
+         * Total number of results in the last query ***(not just the returned rows)***
          */
         count: {
           type: Number,
@@ -85,7 +85,7 @@ Example:
         },
 
         /**
-         * The first item returned from the Catalog request, in a normalized/simplified Format
+         * The first item returned from the Catalog request, in a normalized/simplified Format (see items property)
          *
          * @type {Object}
          */
@@ -97,7 +97,18 @@ Example:
         },
 
         /**
-         * The items returned from the Catalog request, in a normalized/simplified Format
+         * The items returned from the Catalog request, in a normalized/simplified Format.
+         * Object may have fields of library, format, era, author, subject, language, call_number,
+         * region, digital_collection, source, series.
+         *
+         * Example:
+         *
+         *    {"id":"u5722095",
+         *     "tags":["catalog"],
+         *     "title":"Edgar Allan Poe's Richmond: the raven in the River City",
+         *     "author":"Semtner, Christopher P.",
+         *     "format":"Book",
+         *     "image":"http://search.lib.virginia.edu/catalog/u5722095/image.jpg"}
          *
          * @type {Object[]}
          */
@@ -117,7 +128,7 @@ Example:
         },
 
         /**
-         * The id of the item
+         * The id of the item to lookup an item by id (instead of search or facet)
          */
         itemId: {
           type: String,
