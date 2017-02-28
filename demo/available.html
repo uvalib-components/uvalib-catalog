@@ -13,40 +13,51 @@
   <body unresolved>
 
 <demo-snippet id="demo">
-  <template>
+  <template is="dom-bind" id="app">
 
-    <template is="dom-bind" id="app">
+      <uvalib-catalog-availability auto id="availability" item="{{item}}"
+            item-id="u4443298" holdable="{{holdable}}" holdings="{{holdings}}"></uvalib-catalog-availability>
 
-      <uvalib-catalog id="catalog" items="{{items}}" auto
-          item-id="008923770"></uvalib-catalog>
-
-      <h1>{{items.0.title}}</h1>
+      <h1>u4443298</h1>
       <dl>
-        <dt>Format</dt><dd>{{items.0.format}}</dd>
-        <dt>Id</dt><dd>{{items.0.id}}</dd>
-      </dl>
-
-    </template>
-
-  </template>
-</demo-snippet>
-
-<demo-snippet id="demo">
-  <template>
-
-    <template is="dom-bind" id="app">
-
-      <uvalib-catalog-availability id="availability" item="{{item}}"
-            item-id="u4443298" holdable="{{holdable}}"></uvalib-catalog-availability>
-
-      <h1>{{item.title}}</h1>
-      <dl>
-        <dt>Format</dt><dd>{{item.format}}</dd>
-        <dt>Id</dt><dd>{{item.id}}</dd>
         <dt>holdable</dt><dd>{{holdable}}</dd>
       </dl>
-
-    </template>
+      <template is="dom-repeat" items="{{holdings}}">
+        <h3>Holding #{{index}}</h3>
+        <dl>
+          <dt>Library Code</dt><dd>{{item.libraryCode}}</dd>
+          <dt>Library ID</dt><dd>{{item.libraryId}}</dd>
+          <dt>Call Number</dt><dd>{{item.callNumber}}</dd>
+          <dt>Call Number Normalized</dt><dd>{{item.callNumberNormalized}}</dd>
+          <dt>Call Sequence</dt><dd>{{item.callSequence}}</dd>
+          <dt>Holdable</dt><dd>{{item.holdable}}</dd>
+        </dl>
+        <template is="dom-repeat" items="{{item.copies}}">
+          <h4>Copy #{{index}}</h4>
+          <dl>
+            <dt>Barcode</dt><dd>{{item.barcode}}</dd>
+            <dt>Circulate</dt><dd>{{item.circulate}}</dd>
+            <dt>Current Location</dt>
+            <dd>
+              {{item.currentLocation.code}} ->
+              {{item.currentLocation.id}} ->
+              {{item.currentLocation.name}}
+            </dd>
+            <dt>Home Location</dt>
+            <dd>
+              {{item.homeLocation.code}} ->
+              {{item.homeLocation.id}} ->
+              {{item.homeLocation.name}}
+            </dd>
+            <dt>Item Type</dt>
+            <dd>
+              {{item.itemType.code}} ->
+              {{item.itemType.id}}
+            </dd>
+            <dt>Last Checkout</dt><dd>{{item.lastCheckout}}</dd>
+          </dl>
+        </template>
+      </template>
 
   </template>
 </demo-snippet>
