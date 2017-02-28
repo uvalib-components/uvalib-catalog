@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../uvalib-helper-libs/lodash.html">
+<link rel="import" href="uvalib-catalog-behaviors.html">
 
 <!--
 An element used to interface with the UVa Library Catalog API via ajax.
@@ -32,17 +33,8 @@ Example:
 
     Polymer({
       is: 'uvalib-catalog',
-
+      behaviors: [uvalibbehaviors.catalog],
       properties: {
-
-        /**
-         * If true, automatically performs an Ajax request when either `query`,
-         * `page`, or `rows` changes.
-         */
-        auto: {
-          type: Boolean,
-          value: false
-        },
 
         /**
          * Total number of results in the last query ***(not just the returned rows)***
@@ -52,14 +44,6 @@ Example:
           value: 0,
           notify: true,
           readOnly: true
-        },
-
-        /**
-         * Length of time in milliseconds to debounce multiple automatically generated requests.
-         */
-        debounceDuration: {
-          type: Number,
-          value: 0
         },
 
         /**
@@ -128,44 +112,11 @@ Example:
         },
 
         /**
-         * The id of the item to lookup an item by id (instead of search or facet)
-         */
-        itemId: {
-          type: String,
-          value: null
-        },
-
-        /**
          * The selected filters
          */
         selectedFilters: {
           type: Object,
           value: {}
-        },
-
-        /**
-         * Set the timeout flag on the request.
-         */
-        timeout: {
-          type: Number,
-          value: 0
-        },
-
-        /**
-         * If true, error messages will automatically be logged to the console.
-         */
-        verbose: {
-          type: Boolean,
-          value: false
-        },
-
-        /**
-         * True while lastRequest is in flight.
-         */
-        loading: {
-          type: Boolean,
-          notify: true,
-          readOnly: true
         },
 
         /**
@@ -184,22 +135,6 @@ Example:
           type: Number,
           value: 1,
           observer: '_pageChanged'
-        },
-
-        /**
-         * lastRequest's error, if any.
-         *
-         * @type {Object}
-         */
-        lastError: {
-          type: Object,
-          notify: true,
-          readOnly: true
-        },
-
-        _urlBase: {
-          type: String,
-          value: "https://search.lib.virginia.edu/catalog"
         },
 
         /**
@@ -332,7 +267,7 @@ Example:
         if (item.content_model_facet && item.content_model_facet.indexOf("jp2k")>-1)
           return "http://iiif.lib.virginia.edu/iiif/"+item.id+"/full/!250,250/0/default.jpg";
         else
-          return "http://search.lib.virginia.edu/catalog/"+item.id+"/image.jpg"
+          return this._urlBase+"/"+item.id+"/image.jpg";
       },
 
       /**
@@ -446,7 +381,7 @@ Example:
       },
 
       /**
-       * Generate an AJAX request to get catalog items based on the query.
+       * Generate an request after setting up parameters.
        */
       generateRequest: function(){
           this.$.ajax.generateRequest();

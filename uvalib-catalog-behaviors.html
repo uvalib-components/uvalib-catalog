@@ -1,0 +1,79 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+  /**
+   * @demo demo/index.html
+   * @uvalibBehavior uvalibbehavior.catalog
+   */
+  window.uvalibbehaviors = window.uvalibbehaviors || {};
+  uvalibbehaviors.catalog = {
+    properties: {
+      /**
+       * The id of the item to lookup
+       */
+      itemId: {
+        type: String,
+        value: null
+      },
+
+      /**
+       * If true, automatically performs an Ajax request when parameters change
+       */
+      auto: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Length of time in milliseconds to debounce multiple automatically generated requests.
+       */
+      debounceDuration: {
+        type: Number,
+        value: 0
+      },
+
+      /**
+       * Set the timeout flag on the request.
+       */
+      timeout: {
+        type: Number,
+        value: 0
+      },
+
+      /**
+       * If true, error messages will automatically be logged to the console.
+       */
+      verbose: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * True while lastRequest is in flight.
+       */
+      loading: {
+        type: Boolean,
+        notify: true,
+        readOnly: true,
+        value: false
+      },
+
+      /**
+       * lastRequest's error, if any.
+       *
+       * @type {Object}
+       */
+      lastError: {
+        type: Object,
+        notify: true,
+        readOnly: true
+      },
+
+      _urlBase: {
+        type: String,
+        value: "https://search.lib.virginia.edu/catalog"
+      },
+    }
+  };
+
+</script>
