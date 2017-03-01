@@ -37,8 +37,9 @@
 <demo-snippet id="demo">
   <template is="dom-bind" id="app">
 
-      <uvalib-catalog id="catalog" items="{{items}}" auto="{{auto}}" loading="{{loading}}" count="{{totalCount}}" filters="{{filters}}"
-                      debounce-duration="{{debounceDuration}}" query="{{query}}" rows="{{rows}}" page="{{page}}"></uvalib-catalog>
+      <uvalib-catalog id="catalog" items="{{items}}" auto="{{auto}}" loading="{{loading}}"
+                count="{{totalCount}}" filters="{{filters}}" selected-filters="{{selectedFilters}}"
+                debounce-duration="{{debounceDuration}}" query="{{query}}" rows="{{rows}}" page="{{page}}"></uvalib-catalog>
 
       <div class="control"><paper-input label="Query" value="{{query}}"></paper-input></div>
       <div class="control">Results below (page count): <paper-slider value="{{rows}}" min="10" max="100" pin></paper-input></div>
@@ -53,16 +54,12 @@
       </h2>
 
       <div class="control">
-        <template is="dom-if" if="{{isPreviousPage(rows,page,totalCount)}}">
-          <paper-button raised on-tap="previousPage">Previous Page</paper-button>
-        </template>
-        <template is="dom-if" if="{{isNextPage(rows,page,totalCount)}}">
-          <paper-button raised on-tap="nextPage">Next Page</paper-button>
-        </template>
-        <template is="dom-if" if="{{isNextPage(rows,page,totalCount)}}">
-          <paper-button raised on-tap="openFacets">View Facets</paper-button>
-          <paper-filter-dialog id="filter-dialog" filters="{{filters}}" selected-filters="{{selectedFilters}}" on-save="saveFilters"></paper-filter-dialog>
-        </template>
+        <paper-button raised on-tap="previousPage" hidden$="{{!isPreviousPage(rows,page,totalCount)}}">Previous Page</paper-button>
+        <paper-button raised on-tap="nextPage" hidden$="{{!isNextPage(rows,page,totalCount)}}">Next Page</paper-button>
+
+        <paper-button raised on-tap="openFacets" hidden$="{{!totalCount}}">View Facets</paper-button>
+        <paper-filter-dialog id="filter-dialog" filters="{{filters}}" selected-filters="{{selectedFilters}}"></paper-filter-dialog>
+
       </div>
 
       <ul data-loading$="{{loading}}">
@@ -97,9 +94,6 @@
       }
       app.openFacets = function() {
         document.querySelector('#filter-dialog').open();
-      }
-      app.saveFilters = function() {
-        document.querySelector('#catalog').setSelectedFilters(selectedFilters);
       }
     </script>
   </body>
