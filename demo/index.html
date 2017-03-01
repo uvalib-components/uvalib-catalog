@@ -54,12 +54,11 @@
       </h2>
 
       <div class="control">
-        <paper-button raised on-tap="previousPage" hidden$="{{!isPreviousPage(rows,page,totalCount)}}">Previous Page</paper-button>
-        <paper-button raised on-tap="nextPage" hidden$="{{!isNextPage(rows,page,totalCount)}}">Next Page</paper-button>
+        <paper-button raised on-tap="previousPage" disabled$="{{loading}}" hidden$="{{!isPreviousPage(rows,page,totalCount)}}">Previous Page</paper-button>
+        <paper-button raised on-tap="nextPage" disabled$="{{loading}}" hidden$="{{!isNextPage(rows,page,totalCount)}}">Next Page</paper-button>
 
-        <paper-button raised on-tap="openFacets" hidden$="{{!totalCount}}">View Facets</paper-button>
+        <paper-button raised on-tap="openFacets" disabled$="{{loading}}" hidden$="{{!totalCount}}">View Facets</paper-button>
         <paper-filter-dialog id="filter-dialog" filters="{{filters}}" selected-filters="{{selectedFilters}}"></paper-filter-dialog>
-
       </div>
 
       <ul data-loading$="{{loading}}">
