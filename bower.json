@@ -12,22 +12,16 @@
   ],
   "main": "uvalib-catalog.html",
   "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "homepage": "https://github.com/uvalib-components/uvalib-catalog/",
   "ignore": [
     "/.*",
     "/test/"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.8.1",
-    "uvalib-helper-libs": "uvalib-components/uvalib-helper-libs#master",
-    "iron-elements": "PolymerElements/iron-elements#^1.0.10"
-  },
-  "devDependencies": {
-    "web-component-tester": "^4.0.0",
-    "paper-elements": "PolymerElements/paper-elements#^1.0.7",
-    "paper-search": "Collaborne/paper-search#^1.2.1"
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
   },
   "resolutions": {
-    "lodash": "^4.11.2"
+    "lodash": "^4.17.4",
+    "app-storage": "^0.10.0"
   }
 }
