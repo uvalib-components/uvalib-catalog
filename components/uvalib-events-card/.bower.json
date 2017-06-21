@@ -1,0 +1,18 @@
+{
+  "name": "uvalib-events-card",
+  "description": "This card component uses the libCal API to retrieve events and then displays them in a card layout.",
+  "main": "uvalib-events-card.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  },
+  "homepage": "https://github.com/uvalib-components/uvalib-events-card",
+  "_release": "92574706e9",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "92574706e90f6b2124cd94823c8f942dd1af16da"
+  },
+  "_source": "https://github.com/uvalib-components/uvalib-events-card.git",
+  "_target": "master",
+  "_originalSource": "uvalib-components/uvalib-events-card"
+}

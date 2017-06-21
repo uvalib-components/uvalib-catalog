@@ -1,0 +1,8 @@
+{
+  "name": "uvalib-models",
+  "description": "data models used for the Library site",
+  "main": "uvalib-models.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  }
+}

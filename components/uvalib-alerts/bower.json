@@ -1,0 +1,12 @@
+{
+  "name": "uvalib-alerts",
+  "description": "University of Virginia Library Alert dialog",
+  "main": "uvalib-alerts.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  },
+  "resolutions": {
+    "lodash": "^4.17.4",
+    "app-storage": "^0.10.0"
+  }
+}

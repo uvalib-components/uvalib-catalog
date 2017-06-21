@@ -1,0 +1,12 @@
+{
+  "name": "uvalib-button",
+  "description": "Standard button used for content",
+  "main": "uvalib-button.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  },
+  "resolutions": {
+    "lodash": "^4.17.4",
+    "app-storage": "^0.10.0"
+  }
+}

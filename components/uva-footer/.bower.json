@@ -1,0 +1,26 @@
+{
+  "name": "uva-footer",
+  "description": "A footer element for UVA web sites/apps",
+  "main": "uva-footer.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master",
+    "uva-brand-style": "uva-components/uva-brand-style#master",
+    "uva-centered-logo": "uva-components/uva-logos#master"
+  },
+  "devDependencies": {
+    "uva-icon-link": "uva-components/uva-icon-link#master"
+  },
+  "resolutions": {
+    "lodash": "^4.17.4"
+  },
+  "homepage": "https://github.com/uva-components/uva-footer",
+  "_release": "0243f01ac6",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "0243f01ac684e3945c226ad81681988889498e6d"
+  },
+  "_source": "https://github.com/uva-components/uva-footer.git",
+  "_target": "master",
+  "_originalSource": "uva-components/uva-footer"
+}

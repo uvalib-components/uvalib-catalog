@@ -1,0 +1,31 @@
+{
+  "name": "uvalib-helper-libs",
+  "authors": [
+    "Anonymous <anonymous@example.com>"
+  ],
+  "description": "An element providing a solution to no problem in particular.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "uvalib-helper-libs.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  },
+  "_release": "89cd99aa2e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "89cd99aa2e3ba7e0878fb39b34166260a564bfa3"
+  },
+  "_source": "https://github.com/uvalib-components/uvalib-helper-libs.git",
+  "_target": "master",
+  "_originalSource": "uvalib-components/uvalib-helper-libs"
+}

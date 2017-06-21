@@ -1,0 +1,36 @@
+{
+  "name": "uvalib-catalog",
+  "authors": [
+    "Doug Chestnut <dougchestnut@gmail.com>"
+  ],
+  "description": "An element used to interface with the UVa Library Catalog API via ajax.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "uvalib-catalog.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/uvalib-components/uvalib-catalog/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  },
+  "resolutions": {
+    "lodash": "^4.17.4",
+    "app-storage": "^0.10.0"
+  },
+  "_release": "c94f5bfb46",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "c94f5bfb4688d8ba4de529f2035cc2bdc5ea0fc0"
+  },
+  "_source": "https://github.com/uvalib-components/uvalib-catalog.git",
+  "_target": "master",
+  "_originalSource": "uvalib-components/uvalib-catalog",
+  "_direct": true
+}

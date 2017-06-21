@@ -1,0 +1,12 @@
+{
+  "name": "uvalib-card",
+  "description": "Card display component for the Library Web",
+  "main": "uvalib-card.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  },
+  "resolutions": {
+    "lodash": "^4.17.4",
+    "app-storage": "^0.10.0"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "uva-logo",
+  "description": "UVA logo",
+  "main": "uva-logo.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  },
+  "homepage": "https://github.com/uva-components/uva-logos",
+  "_release": "ec6540761b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "ec6540761ba866ac60408588d161896a13226abc"
+  },
+  "_source": "https://github.com/uva-components/uva-logos.git",
+  "_target": "master",
+  "_originalSource": "uva-components/uva-logos"
+}

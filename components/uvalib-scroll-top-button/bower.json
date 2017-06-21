@@ -1,0 +1,8 @@
+{
+  "name": "uvalib-scroll-top-button",
+  "description": "Adds a scroll to top button when the pane is scrolled",
+  "main": "uvalib-scroll-top-button.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  }
+}

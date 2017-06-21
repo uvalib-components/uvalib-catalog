@@ -1,0 +1,8 @@
+{
+  "name": "uvalib-libraries",
+  "description": "UI component to display library or lab content",
+  "main": "uvalib-libraries.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  }
+}

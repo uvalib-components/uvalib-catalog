@@ -1,0 +1,8 @@
+{
+  "name": "uva-logo",
+  "description": "UVA logo",
+  "main": "uva-logo.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master" 
+  }
+}

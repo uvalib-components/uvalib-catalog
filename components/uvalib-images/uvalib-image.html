@@ -1,0 +1,66 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../uvalib-models/uvalib-model-file.html">
+
+<!--
+`uvalib-image`
+Used to present Library image resources given a uuid
+
+@demo demo/index.html
+-->
+
+<dom-module id="uvalib-image">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+      [hidden] {
+        display: none;
+      }
+      img {
+        width: 100%
+      }
+    </style>
+    <template is="dom-if" if="[[uuid]]">
+      <uvalib-model-file uuid="[[uuid]]" data="{{_file}}"></uvalib-model-file>
+      <template is="dom-if" if="[[_imageLoaded(_file)]]">
+        <template is="dom-if" if="[[_file.compSrc]]">
+          <picture>
+            <template is="dom-if" if="[[_file.webpSrc]]"> 
+             <source srcset="[[_file.webpSrc]]" type="image/webp">
+            </template>
+            <img src="[[_file.compSrc]]" alt="[[alt]]">
+          </picture>
+        </template>
+        <template is="dom-if" if="[[!_file.compSrc]]">
+          <img src="[[_file.origSrc]]" alt="[[alt]]">
+        </template>
+      </template>
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'uvalib-image',
+
+      properties: {
+        alt: {
+          type: String,
+          value: null
+        },
+        uuid: {
+          type: String,
+          value: null,
+        },
+        _file: {
+          type: Object,
+          value: null
+        }
+      },
+      _imageLoaded: function(file){
+        return !!(file && file.origSrc);
+      }
+    });
+  </script>
+</dom-module>

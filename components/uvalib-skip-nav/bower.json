@@ -1,0 +1,8 @@
+{
+  "name": "uvalib-skip-nav",
+  "description": "Skip to page content",
+  "main": "uvalib-skip-nav.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "uvalib-page",
+  "description": "Library Web Page template",
+  "main": "uvalib-page.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  }
+}

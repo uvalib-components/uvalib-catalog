@@ -1,0 +1,7 @@
+{
+  "name": "uvalib-forms",
+  "main": "uvalib-forms.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  }
+}

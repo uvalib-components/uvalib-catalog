@@ -1,0 +1,8 @@
+{
+  "name": "uvalib-nav",
+  "description": "Navigation content component",
+  "main": "uvalib-nav.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "uvalib-theme",
+  "description": "Common UVA Library styles",
+  "main": "uvalib-theme.html",
+  "dependencies": {
+    "uvalib-elements": "uvalib-components/uvalib-elements#master"
+  }
+}
